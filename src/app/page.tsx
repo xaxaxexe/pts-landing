@@ -237,7 +237,7 @@ export default function Home() {
 			<footer className="bg-hero-gradient py-16">
 				<div className="flex justify-between items-center max-w-5xl mx-auto">
 					<div className="flex flex-col gap-4">
-						<div className="flex gap-3 ">
+						<div className="flex justify-between">
 							<VkIcon className="h-14 w-14" />
 							<TelegramIcon className="h-14 w-14" />
 							<YoutubeIcon className="h-14 w-14" />
