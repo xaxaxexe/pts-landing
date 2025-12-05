@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+:root {
+  --background: #060606;
+  --foreground: #e5e7eb;
+  --accent: #38bdf8;
+  --graphite: #696969;
+  --slate-24: #242424;
+  --silver: #b4b4b4;
+  --ink: #1c1c1c;
+  --ash: #8d8d8d;
+  --azure: #0080ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-carbon: #101010;
+  --color-graphite: var(--graphite);
+  --color-slate-24: var(--slate-24);
+  --color-silver: var(--silver);
+  --color-ink: var(--ink);
+  --color-ash: var(--ash);
+  --color-azure: var(--azure);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), "Inter", "Segoe UI", system-ui, -apple-system,
+    sans-serif;
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.2);
+  color: #f8fafc;
+}
+
+@layer utilities {
+  .bg-hero-gradient {
+    background: linear-gradient(135deg, #0080FF 0%, #2a7bff 45%, #0066ff 100%);
+  }
+}
