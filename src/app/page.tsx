@@ -37,7 +37,7 @@ export default function Home() {
 					</div>
 				</section>
 
-				<section className="w-full flex flex-col gap-15 px-12 pt-20">
+				<section className="w-full flex flex-col gap-15 px-24 pt-20">
 					<ProductSection title="PTS LOW">
 						<ProductCard
 							title="PTS PC #1"
@@ -150,12 +150,12 @@ export default function Home() {
 						</li>
 					</ul>
 				</section>
-				<section className="w-full flex flex-col gap-15 px-12 pt-20">
+				<section className="w-full flex flex-col gap-15 px-34 pt-20">
 					{" "}
 					<h2 className="text-5xl text-center font-semibold">
 						Присмотрел что-то? <br /> заполни форму!
 					</h2>
-					<div className="w-full flex flex-col justify-center items-center bg-carbon p-6 gap-4 rounded-3xl">
+					<div className="w-full flex flex-col justify-center items-center bg-carbon p-8 gap-4 rounded-3xl">
 						<div className="w-full flex items-center gap-5 rounded-2xl bg-ink p-8">
 							<UserIcon className="h-7 w-7 text-silver" />
 							<input
@@ -222,7 +222,7 @@ export default function Home() {
 									Я согласен на обработку персональных данных
 								</span>
 							</label>
-							<button className="w-full cursor-pointer rounded-xl bg-hero-gradient p-7 text-2xl font-medium">
+							<button className="w-full cursor-pointer rounded-2xl bg-hero-gradient p-7 text-2xl font-medium">
 								Отправить форму
 							</button>
 						</div>
