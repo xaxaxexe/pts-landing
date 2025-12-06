@@ -10,6 +10,7 @@
   --ink: #1c1c1c;
   --ash: #8d8d8d;
   --azure: #0080ff;
+  --border: #282828;
 }
 
 @theme inline {
@@ -22,6 +23,7 @@
   --color-ink: var(--ink);
   --color-ash: var(--ash);
   --color-azure: var(--azure);
+  --color-border: var(--border);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
