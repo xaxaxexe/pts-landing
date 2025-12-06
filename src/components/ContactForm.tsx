@@ -7,7 +7,7 @@ import UserIcon from "@/components/icons/UserIcon";
 export default function ContactForm() {
 	return (
 		<section className="w-full max-w-3xl flex flex-col gap-5 sm:gap-10 pt-10 mx-auto">
-			<h2 className="text-center text-2xl sm:text-3xl lg:text-5xl font-semibold">
+			<h2 className="text-center text-2xl sm:text-3xl lg:text-5xl font-semibold text-white">
 				Присмотрел что-то? <br /> заполни форму!
 			</h2>
 			<form className="flex w-full flex-col items-center gap-4 rounded-2xl sm:rounded-3xl bg-carbon p-4 sm:p-8">

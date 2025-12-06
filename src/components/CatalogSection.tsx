@@ -5,7 +5,7 @@ export default function CatalogSection() {
 	return (
 		<section
 			id="catalog"
-			className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto px-2 sm:px-0"
+			className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto px-2 sm:px-0 text-white"
 		>
 			<ProductSection title="PTS LOW">
 				<ProductCard

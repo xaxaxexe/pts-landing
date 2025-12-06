@@ -9,12 +9,12 @@ export default function Footer() {
 			<div className="mx-auto w-full max-w-6xl px-5 lg:px-2 flex flex-col gap-3 sm:flex-row items-center sm:gap-0 sm:justify-between">
 				<div className="flex flex-col gap-1 sm:gap-4">
 					<div className="flex justify-between">
-						<VkIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />
-						<TelegramIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />
-						<YoutubeIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />
-						<AvitoIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />
+						<VkIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-white" />
+						<TelegramIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-white" />
+						<YoutubeIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-white" />
+						<AvitoIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-white" />
 					</div>
-					<span className="text-xl sm:text-3xl font-semibold">
+					<span className="text-xl sm:text-3xl font-semibold text-white">
 						+7 (917) 354 43-34
 					</span>
 				</div>

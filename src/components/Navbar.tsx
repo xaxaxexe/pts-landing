@@ -5,7 +5,7 @@ import YoutubeIcon from "@/components/icons/YoutubeIcon";
 
 export default function Navbar() {
 	return (
-		<nav className="relative z-10 flex w-full flex-col gap-6 text-base font-semibold text-slate-100">
+		<nav className="relative z-10 flex w-full flex-col gap-6 text-base font-semibold text-white">
 			<div className="flex w-full items-center justify-between">
 				<img
 					src="/logo.png"
