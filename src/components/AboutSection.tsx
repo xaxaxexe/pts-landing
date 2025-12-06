@@ -5,7 +5,7 @@ export default function AboutSection() {
 	return (
 		<section
 			id="about"
-			className="flex w-full flex-col items-center gap-4 sm:gap-9 lg:gap-15 pt-10"
+			className="flex w-full flex-col items-center gap-4 sm:gap-9 lg:gap-10 pt-10"
 		>
 			<h2 className="text-center text-4xl sm:text-5xl lg:text-7xl font-bold">
 				О НАС
