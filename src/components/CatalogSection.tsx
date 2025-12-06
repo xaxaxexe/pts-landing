@@ -41,20 +41,8 @@ export default function CatalogSection() {
 			id="catalog"
 			className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto px-2 sm:px-0 text-white"
 		>
-			{isLoading && (
+			{isLoading && isError && (
 				<div className="text-xl font-semibold text-silver">Загрузка...</div>
-			)}
-
-			{isError && (
-				<div className="text-xl font-semibold text-red-400">
-					Ошибка загрузки товаров
-				</div>
-			)}
-
-			{!isLoading && !isError && data?.products.length === 0 && (
-				<div className="text-xl font-semibold text-silver">
-					Товары не найдены
-				</div>
 			)}
 
 			{!isLoading &&
