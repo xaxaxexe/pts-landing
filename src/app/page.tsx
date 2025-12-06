@@ -21,13 +21,11 @@ export default function Home() {
 	return (
 		<>
 			<BackgroundGlow />
-			<header
-				className={`w-full max-w-3xl relative z-10 pt-10 pb-15 mx-auto px-5 lg:px-2`}
-			>
+			<header className={`w-full max-w-3xl pt-10 pb-15 mx-auto px-5 lg:px-2`}>
 				<Navbar />
 			</header>
 			<main
-				className={`${PAGE_CONTAINER} relative z-10 pb-20 flex flex-col gap-14 px-5 lg:px-2 mt-4 lg:mt-10`}
+				className={`${PAGE_CONTAINER} pb-20 flex flex-col gap-14 px-5 lg:px-2 mt-4 lg:mt-10`}
 			>
 				<section className="flex w-full flex-col items-center justify-center gap-4 sm:gap-10 sm:flex-row sm:items-start">
 					<div className="w-full h-54 lg:h-76 lg:w-82 rounded-4xl lg:rounded-[20%] bg-gray-300" />
