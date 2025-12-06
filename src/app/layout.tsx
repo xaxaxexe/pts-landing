@@ -24,9 +24,9 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="ru">
 			<body
-				className={`${inter.variable} ${geistMono.variable} antialiased relative bg-[#060606] text-slate-100`}
+				className={`${inter.variable} ${geistMono.variable} antialiased overflow-x-clip relative bg-[#060606] text-slate-100`}
 			>
 				{children}
 			</body>

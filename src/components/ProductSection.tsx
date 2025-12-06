@@ -11,8 +11,10 @@ export default function ProductSection({
 }: ProductSectionProps) {
 	return (
 		<section className="flex w-full flex-col gap-5">
-			<h2 className="text-center text-4xl font-semibold">{title}</h2>
-			<div className="grid w-full gap-4 md:grid-cols-2">{children}</div>
+			<h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-semibold">
+				{title}
+			</h2>
+			<div className="grid w-full gap-4 sm:grid-cols-2">{children}</div>
 		</section>
 	);
 }
