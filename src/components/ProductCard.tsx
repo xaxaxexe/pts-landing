@@ -3,6 +3,7 @@ import GpuCardIcon from "@/components/icons/GpuCardIcon";
 import ProcessorIcon from "@/components/icons/ProcessorIcon";
 import SsdIcon from "@/components/icons/SsdIcon";
 import SettingsIcon from "@/components/icons/SettingsIcon";
+import Image, { type StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 
 type SpecIcon = "memory" | "gpu" | "cpu" | "ssd";
@@ -16,7 +17,7 @@ type ProductCardProps = {
 	title: string;
 	price: string;
 	specs: Spec[];
-	image?: ReactNode;
+	image: string;
 };
 
 const iconMap: Record<SpecIcon, ReactNode> = {
@@ -34,9 +35,12 @@ export default function ProductCard({
 }: ProductCardProps) {
 	return (
 		<div className="flex flex-col gap-3 rounded-2xl bg-carbon p-3 sm:rounded-3xl sm:p-4 md:p-5">
-			<div className="aspect-4/3 w-full overflow-hidden rounded-xl bg-gray-100 sm:rounded-2xl">
-				{image}
-			</div>
+			<img
+				src={image}
+				alt={title}
+				className="aspect-4/3 object-cover rounded-xl  sm:rounded-2xl"
+			/>
+
 			<div className="flex sm:items-center justify-between text-base sm:text-lg lg:text-xl">
 				<span className="font-bold leading-tight">{title}</span>
 				<span className="font-semibold leading-tight">{price}</span>

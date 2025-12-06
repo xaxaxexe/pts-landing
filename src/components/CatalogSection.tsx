@@ -17,6 +17,7 @@ export default function CatalogSection() {
 						{ icon: "cpu", label: "Intel i7-12000k" },
 						{ icon: "ssd", label: "1 TB SSD" },
 					]}
+					image="/assets/card.png"
 				/>
 				<ProductCard
 					title="PTS PC #2"
@@ -27,6 +28,7 @@ export default function CatalogSection() {
 						{ icon: "cpu", label: "Intel i5-13600K" },
 						{ icon: "ssd", label: "1 TB SSD" },
 					]}
+					image="/assets/card.png"
 				/>
 			</ProductSection>
 			<ProductSection title="PTS MEDIUM">
@@ -39,6 +41,7 @@ export default function CatalogSection() {
 						{ icon: "cpu", label: "Intel i7-12000k" },
 						{ icon: "ssd", label: "1 TB SSD" },
 					]}
+					image="/assets/card.png"
 				/>
 				<ProductCard
 					title="PTS PC #2"
@@ -49,6 +52,7 @@ export default function CatalogSection() {
 						{ icon: "cpu", label: "Intel i5-13600K" },
 						{ icon: "ssd", label: "1 TB SSD" },
 					]}
+					image="/assets/card.png"
 				/>
 			</ProductSection>
 			<ProductSection title="PTS PRO">
@@ -61,6 +65,7 @@ export default function CatalogSection() {
 						{ icon: "cpu", label: "Intel i7-12000k" },
 						{ icon: "ssd", label: "1 TB SSD" },
 					]}
+					image="/assets/card.png"
 				/>
 				<ProductCard
 					title="PTS PC #2"
@@ -71,6 +76,7 @@ export default function CatalogSection() {
 						{ icon: "cpu", label: "Intel i5-13600K" },
 						{ icon: "ssd", label: "1 TB SSD" },
 					]}
+					image="/assets/card.png"
 				/>
 			</ProductSection>
 		</section>
