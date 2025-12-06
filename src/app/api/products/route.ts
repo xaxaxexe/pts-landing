@@ -1,0 +1,223 @@
+import { NextRequest, NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import Product from "@/models/Product";
+import { unlink } from "fs/promises";
+import { join } from "path";
+import { existsSync } from "fs";
+
+export async function POST(request: NextRequest) {
+	try {
+		await connectDB();
+
+		const body = await request.json();
+		const { category, title, price, specs, image } = body;
+
+		if (!category || !title || !price || !specs || !image) {
+			return NextResponse.json(
+				{ error: "Missing required fields" },
+				{ status: 400 }
+			);
+		}
+
+		if (!["PTS LOW", "PTS MEDIUM", "PTS PRO"].includes(category)) {
+			return NextResponse.json(
+				{ error: "Invalid category. Must be PTS LOW, PTS MEDIUM, or PTS PRO" },
+				{ status: 400 }
+			);
+		}
+
+		if (!Array.isArray(specs) || specs.length === 0) {
+			return NextResponse.json(
+				{ error: "Specs must be a non-empty array" },
+				{ status: 400 }
+			);
+		}
+
+		for (const spec of specs) {
+			if (!spec.type) {
+				return NextResponse.json(
+					{ error: "Each spec must have a type" },
+					{ status: 400 }
+				);
+			}
+
+			if (!["cpu", "gpu", "memory", "ssd"].includes(spec.type)) {
+				return NextResponse.json(
+					{ error: "Invalid spec type. Must be cpu, gpu, memory, or ssd" },
+					{ status: 400 }
+				);
+			}
+
+			if (spec.type === "cpu" || spec.type === "gpu") {
+				if (!spec.value) {
+					return NextResponse.json(
+						{ error: `${spec.type} must have a value` },
+						{ status: 400 }
+					);
+				}
+				if (spec.options) {
+					return NextResponse.json(
+						{ error: `${spec.type} should not have options array` },
+						{ status: 400 }
+					);
+				}
+			}
+
+			if (spec.type === "memory" || spec.type === "ssd") {
+				if (spec.value) {
+					return NextResponse.json(
+						{ error: `${spec.type} should not have a single value` },
+						{ status: 400 }
+					);
+				}
+				if (
+					!spec.options ||
+					!Array.isArray(spec.options) ||
+					spec.options.length === 0
+				) {
+					return NextResponse.json(
+						{ error: `${spec.type} must have at least one option` },
+						{ status: 400 }
+					);
+				}
+
+				for (const option of spec.options) {
+					if (!option.value || typeof option.price !== "number") {
+						return NextResponse.json(
+							{
+								error: `Each ${spec.type} option must have value and price`,
+							},
+							{ status: 400 }
+						);
+					}
+				}
+			}
+		}
+
+		const product = await Product.create({
+			category,
+			title,
+			price,
+			specs,
+			image,
+		});
+
+		return NextResponse.json(
+			{
+				success: true,
+				product,
+			},
+			{ status: 201 }
+		);
+	} catch (error) {
+		console.error("Error creating product:", error);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 }
+		);
+	}
+}
+
+export async function GET(request: NextRequest) {
+	try {
+		await connectDB();
+
+		const { searchParams } = new URL(request.url);
+		const category = searchParams.get("category");
+
+		let query = {};
+		if (category) {
+			if (!["PTS LOW", "PTS MEDIUM", "PTS PRO"].includes(category)) {
+				return NextResponse.json(
+					{
+						error: "Invalid category. Must be PTS LOW, PTS MEDIUM, or PTS PRO",
+					},
+					{ status: 400 }
+				);
+			}
+			query = { category };
+		}
+
+		const products = await Product.find(query);
+
+		const categoryOrder = ["PTS LOW", "PTS MEDIUM", "PTS PRO"];
+		const sortedProducts = products.sort((a, b) => {
+			const indexA = categoryOrder.indexOf(a.category);
+			const indexB = categoryOrder.indexOf(b.category);
+
+			if (indexA === indexB) {
+				return (
+					new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+				);
+			}
+
+			return indexA - indexB;
+		});
+
+		return NextResponse.json(
+			{
+				success: true,
+				count: sortedProducts.length,
+				products: sortedProducts,
+			},
+			{ status: 200 }
+		);
+	} catch (error) {
+		console.error("Error fetching products:", error);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 }
+		);
+	}
+}
+
+export async function DELETE(request: NextRequest) {
+	try {
+		await connectDB();
+
+		const { searchParams } = new URL(request.url);
+		const id = searchParams.get("id");
+
+		if (!id) {
+			return NextResponse.json(
+				{ error: "Product ID is required" },
+				{ status: 400 }
+			);
+		}
+
+		const product = await Product.findById(id);
+
+		if (!product) {
+			return NextResponse.json({ error: "Product not found" }, { status: 404 });
+		}
+
+		if (product.image && product.image.startsWith("/uploads/")) {
+			try {
+				const filename = product.image.replace("/uploads/", "");
+				const filepath = join(process.cwd(), "public", "uploads", filename);
+
+				if (existsSync(filepath)) {
+					await unlink(filepath);
+				}
+			} catch (fileError) {
+				console.error("Error deleting image file:", fileError);
+			}
+		}
+
+		await Product.findByIdAndDelete(id);
+
+		return NextResponse.json(
+			{
+				success: true,
+				message: "Product and image deleted successfully",
+			},
+			{ status: 200 }
+		);
+	} catch (error) {
+		console.error("Error deleting product:", error);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 }
+		);
+	}
+}

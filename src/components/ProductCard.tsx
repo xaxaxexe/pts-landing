@@ -15,7 +15,7 @@ type Spec = {
 
 type ProductCardProps = {
 	title: string;
-	price: string;
+	price: number;
 	specs: Spec[];
 	image: string;
 };
@@ -43,7 +43,7 @@ export default function ProductCard({
 
 			<div className="flex sm:items-center justify-between text-base sm:text-lg lg:text-xl">
 				<span className="font-bold leading-tight">{title}</span>
-				<span className="font-semibold leading-tight">{price}</span>
+				<span className="font-semibold leading-tight">{price} р.</span>
 			</div>
 			<ul className="flex flex-col gap-2">
 				{specs.map((spec) => (

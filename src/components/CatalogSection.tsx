@@ -1,84 +1,86 @@
+"use client";
+
 import ProductCard from "@/components/ProductCard";
 import ProductSection from "@/components/ProductSection";
+import { useGetProductsQuery } from "@/store/api/productsApi";
+import type { Spec, SpecType } from "@/types/product";
+
+const iconMap: Record<SpecType, SpecType> = {
+	memory: "memory",
+	gpu: "gpu",
+	cpu: "cpu",
+	ssd: "ssd",
+};
+
+const formatSpecsForCard = (specs: Spec[]) => {
+	return specs.map((spec) => ({
+		icon: iconMap[spec.type],
+		label:
+			spec.type === "cpu" || spec.type === "gpu"
+				? spec.value || ""
+				: spec.options?.[0]?.value || "",
+	}));
+};
 
 export default function CatalogSection() {
+	const { data, isLoading, isError } = useGetProductsQuery();
+
+	const groupedProducts =
+		data?.products.reduce((acc, product) => {
+			if (!acc[product.category]) {
+				acc[product.category] = [];
+			}
+			acc[product.category].push(product);
+			return acc;
+		}, {} as Record<string, typeof data.products>) || {};
+
+	const categories = Object.keys(groupedProducts);
+
 	return (
 		<section
 			id="catalog"
 			className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto px-2 sm:px-0 text-white"
 		>
-			<ProductSection title="PTS LOW">
-				<ProductCard
-					title="PTS PC #1"
-					price="133 390 р."
-					specs={[
-						{ icon: "memory", label: "64 GB" },
-						{ icon: "gpu", label: "RTX 5090" },
-						{ icon: "cpu", label: "Intel i7-12000k" },
-						{ icon: "ssd", label: "1 TB SSD" },
-					]}
-					image="/assets/card.png"
-				/>
-				<ProductCard
-					title="PTS PC #2"
-					price="142 990 р."
-					specs={[
-						{ icon: "memory", label: "32 GB" },
-						{ icon: "gpu", label: "RTX 4080" },
-						{ icon: "cpu", label: "Intel i5-13600K" },
-						{ icon: "ssd", label: "1 TB SSD" },
-					]}
-					image="/assets/card.png"
-				/>
-			</ProductSection>
-			<ProductSection title="PTS MEDIUM">
-				<ProductCard
-					title="PTS PC #1"
-					price="133 390 р."
-					specs={[
-						{ icon: "memory", label: "64 GB" },
-						{ icon: "gpu", label: "RTX 5090" },
-						{ icon: "cpu", label: "Intel i7-12000k" },
-						{ icon: "ssd", label: "1 TB SSD" },
-					]}
-					image="/assets/card.png"
-				/>
-				<ProductCard
-					title="PTS PC #2"
-					price="142 990 р."
-					specs={[
-						{ icon: "memory", label: "32 GB" },
-						{ icon: "gpu", label: "RTX 4080" },
-						{ icon: "cpu", label: "Intel i5-13600K" },
-						{ icon: "ssd", label: "1 TB SSD" },
-					]}
-					image="/assets/card.png"
-				/>
-			</ProductSection>
-			<ProductSection title="PTS PRO">
-				<ProductCard
-					title="PTS PRO"
-					price="133 390 р."
-					specs={[
-						{ icon: "memory", label: "64 GB" },
-						{ icon: "gpu", label: "RTX 5090" },
-						{ icon: "cpu", label: "Intel i7-12000k" },
-						{ icon: "ssd", label: "1 TB SSD" },
-					]}
-					image="/assets/card.png"
-				/>
-				<ProductCard
-					title="PTS PC #2"
-					price="142 990 р."
-					specs={[
-						{ icon: "memory", label: "32 GB" },
-						{ icon: "gpu", label: "RTX 4080" },
-						{ icon: "cpu", label: "Intel i5-13600K" },
-						{ icon: "ssd", label: "1 TB SSD" },
-					]}
-					image="/assets/card.png"
-				/>
-			</ProductSection>
+			{isLoading && (
+				<div className="text-xl font-semibold text-silver">Загрузка...</div>
+			)}
+
+			{isError && (
+				<div className="text-xl font-semibold text-red-400">
+					Ошибка загрузки товаров
+				</div>
+			)}
+
+			{!isLoading && !isError && data?.products.length === 0 && (
+				<div className="text-xl font-semibold text-silver">
+					Товары не найдены
+				</div>
+			)}
+
+			{!isLoading &&
+				!isError &&
+				data?.products &&
+				categories.map((category) => {
+					const categoryProducts = groupedProducts[category];
+
+					if (!categoryProducts || categoryProducts.length === 0) {
+						return null;
+					}
+
+					return (
+						<ProductSection key={category} title={category}>
+							{categoryProducts.map((product) => (
+								<ProductCard
+									key={product._id}
+									title={product.title}
+									price={product.price}
+									specs={formatSpecsForCard(product.specs)}
+									image={product.image}
+								/>
+							))}
+						</ProductSection>
+					);
+				})}
 		</section>
 	);
 }
