@@ -3,18 +3,11 @@
 import ProductCard from "@/components/ProductCard";
 import ProductSection from "@/components/ProductSection";
 import { useGetProductsQuery } from "@/store/api/productsApi";
-import type { Spec, SpecType } from "@/types/product";
-
-const iconMap: Record<SpecType, SpecType> = {
-	memory: "memory",
-	gpu: "gpu",
-	cpu: "cpu",
-	ssd: "ssd",
-};
+import type { Spec } from "@/types/product";
 
 const formatSpecsForCard = (specs: Spec[]) => {
 	return specs.map((spec) => ({
-		icon: iconMap[spec.type],
+		icon: spec.type,
 		label:
 			spec.type === "cpu" || spec.type === "gpu"
 				? spec.value || ""
@@ -64,6 +57,7 @@ export default function CatalogSection() {
 									price={product.price}
 									specs={formatSpecsForCard(product.specs)}
 									image={product.image}
+									productData={product}
 								/>
 							))}
 						</ProductSection>

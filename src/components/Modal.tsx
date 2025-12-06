@@ -4,14 +4,19 @@ import Portal from "@/components/Portal";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
 import SsdIcon from "@/components/icons/SsdIcon";
 import SpecSelect from "./SpecSelect";
+import type { Product } from "@/types/product";
 
 interface ModalProps {
 	isOpen: boolean;
 	onClose: () => void;
+	productData: Product;
 }
 
-export default function Modal({ isOpen, onClose }: ModalProps) {
+export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 	if (!isOpen) return null;
+
+	const memorySpec = productData.specs.find((spec) => spec.type === "memory");
+	const ssdSpec = productData.specs.find((spec) => spec.type === "ssd");
 
 	return (
 		<Portal lockScroll>
@@ -28,22 +33,22 @@ export default function Modal({ isOpen, onClose }: ModalProps) {
 								Редактирование
 							</h2>
 							<div className="flex flex-col gap-4">
-								<SpecSelect
-									icon={<MemoryCardIcon className="w-5 h-5 text-white" />}
-									label="Оперативная память"
-									value="64 GB"
-									// onClick={() => {
-									// 	/* открыть dropdown */
-									// }}
-								/>{" "}
-								<SpecSelect
-									icon={<SsdIcon className="w-5 h-5 text-white" />}
-									label="SSD"
-									value="1 TB SSD"
-									// onClick={() => {
-									// 	/* открыть dropdown */
-									// }}
-								/>{" "}
+								{memorySpec && memorySpec.options && (
+									<SpecSelect
+										icon={<MemoryCardIcon className="w-5 h-5 text-white" />}
+										label="Оперативная память"
+										value={memorySpec.options[0]?.value || ""}
+										options={memorySpec.options}
+									/>
+								)}
+								{ssdSpec && ssdSpec.options && (
+									<SpecSelect
+										icon={<SsdIcon className="w-5 h-5 text-white" />}
+										label="SSD"
+										value={ssdSpec.options[0]?.value || ""}
+										options={ssdSpec.options}
+									/>
+								)}
 							</div>
 						</div>
 						<button className="w-full cursor-pointer rounded-xl bg-hero-gradient p-3 text-base font-semibold">

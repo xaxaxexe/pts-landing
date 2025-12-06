@@ -1,9 +1,15 @@
 export type SpecType = "cpu" | "gpu" | "memory" | "ssd";
 export type Category = "PTS LOW" | "PTS MEDIUM" | "PTS PRO";
+export type SpecIcon = "memory" | "gpu" | "cpu" | "ssd";
 
 export interface SpecOption {
 	value: string;
 	price: number;
+}
+
+export interface SpecForCard {
+	icon: SpecIcon;
+	label: string;
 }
 
 export interface Spec {
