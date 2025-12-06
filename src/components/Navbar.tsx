@@ -26,7 +26,7 @@ export default function Navbar() {
 						О нас
 					</a>
 				</div>
-				<div className="flex flex-col items-end gap-2">
+				<div className="flex flex-col items-center gap-2">
 					<div className="flex items-center gap-3">
 						<VkIcon className="h-8 w-8" />
 						<TelegramIcon className="h-8 w-8" />
@@ -34,7 +34,7 @@ export default function Navbar() {
 						<AvitoIcon className="h-8 w-8" />
 					</div>
 
-					<span className="text-base font-semibold leading-tight">
+					<span className="text-base text-center font-semibold leading-tight">
 						+7 (917) 354 43-34
 					</span>
 				</div>

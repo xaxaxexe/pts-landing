@@ -14,7 +14,7 @@ export default function Footer() {
 						<YoutubeIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-white" />
 						<AvitoIcon className="w-10 h-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-white" />
 					</div>
-					<span className="text-xl sm:text-3xl font-semibold text-white">
+					<span className="text-xl sm:text-3xl font-semibold text-white text-center">
 						+7 (917) 354 43-34
 					</span>
 				</div>
