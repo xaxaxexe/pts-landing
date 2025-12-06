@@ -40,7 +40,7 @@ export default function AboutSection() {
 				</div>
 			</dl>
 
-			<dl className="grid w-full gap-10 pt-5 sm:pt-12 text-center sm:grid-cols-2">
+			<dl className="flex flex-col justify-around items-center w-full gap-10 pt-5 sm:pt-12 text-center lg:flex-row">
 				<div className="flex flex-col items-center justify-center">
 					<div className="flex items-center justify-center gap-2 lg:gap-4 font-semibold">
 						<HeartIcon className="w-10 h-10 lg:h-14 lg:w-14" />
