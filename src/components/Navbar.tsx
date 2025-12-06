@@ -15,7 +15,7 @@ export default function Navbar() {
 						<YoutubeIcon className="h-8 w-8" />
 						<AvitoIcon className="h-8 w-8" />
 					</div>
-					<span className="text-sm sm:text-base font-semibold leading-tight">
+					<span className="text-base font-semibold leading-tight">
 						+7 (917) 354 43-34
 					</span>
 				</div>
