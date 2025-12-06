@@ -24,8 +24,6 @@ export default function Home() {
 			</main>
 
 			<Footer />
-
-			{/* <Modal isOpen={true} onClose={""} /> */}
 		</>
 	);
 }
