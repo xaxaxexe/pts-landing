@@ -15,12 +15,17 @@ import UserIcon from "@/components/icons/UserIcon";
 import VkIcon from "@/components/icons/VkIcon";
 import YoutubeIcon from "@/components/icons/YoutubeIcon";
 
+const PAGE_CONTAINER = "mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-10";
+
 export default function Home() {
 	return (
-		<div className="relative min-h-screen overflow-hidden bg-[#060606] text-slate-100">
-			<BackgroundGlow />
-			<Navbar />
-			<main className="relative z-10 mx-auto flex max-w-5xl flex-col items-center gap-14 px-6 py-10">
+		<>
+			<header className={`w-full max-w-3xl relative z-10 pt-5 pb-15 mx-auto`}>
+				<Navbar />
+			</header>
+			<main
+				className={`${PAGE_CONTAINER} relative z-10 pb-20 flex flex-col gap-16`}
+			>
 				<section className="flex w-full flex-col items-center justify-center gap-10 sm:flex-row sm:items-start">
 					<div className="h-76 w-82 rounded-[20%] bg-gray-300" />
 					<div className="flex flex-col gap-5 text-center sm:text-left">
@@ -37,7 +42,7 @@ export default function Home() {
 					</div>
 				</section>
 
-				<section className="w-full flex flex-col gap-15 px-24 pt-20">
+				<section className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto">
 					<ProductSection title="PTS LOW">
 						<ProductCard
 							title="PTS PC #1"
@@ -105,137 +110,168 @@ export default function Home() {
 						/>
 					</ProductSection>
 				</section>
-				<section className="w-full flex flex-col justify-start items-center gap-15 px-4 pt-20">
-					<h2 className="text-7xl text-center font-bold">О НАС</h2>
-					<span className="text-3xl text-silver font-medium text-center">
-						<span className="text-white font-bold">POWERTECHSTORE</span> — это
+				<section
+					id="about"
+					className="flex w-full flex-col items-center gap-15 pt-10"
+				>
+					<h2 className="text-center text-7xl font-bold">О НАС</h2>
+					<p className="text-center text-3xl font-medium text-silver">
+						<span className="font-bold text-white">POWERTECHSTORE</span> — это
 						прекрасное решение для сборки компьютера именно мы можем в короткий
 						срок собрать и доставить вам вашего железного зверя
-					</span>
-					<ul className="w-full flex justify-between text-7xl pt-20">
-						<li className="flex flex-col justify-center items-center gap-1">
-							<span className="font-semibold">1000+</span>
-							<span className="text-2xl text-silver font-medium">Клиентов</span>
-						</li>
-						<li className="flex flex-col justify-center items-center gap-1">
-							<span className="font-semibold">1000+</span>
-							<span className="text-2xl text-silver font-medium">
+					</p>
+					<dl className="grid w-full gap-10 pt-12 text-center sm:grid-cols-3">
+						<div className="flex flex-col items-center gap-1">
+							<dt className="text-2xl font-medium text-silver">Клиентов</dt>
+							<dd className="text-5xl font-semibold">1000+</dd>
+						</div>
+						<div className="flex flex-col items-center gap-1">
+							<dt className="text-2xl font-medium text-silver">
 								Компьютеров собрано
-							</span>
-						</li>
-						<li className="flex flex-col justify-center items-center gap-1">
-							<span className="font-semibold">6</span>
-							<span className="text-2xl text-silver font-medium">
-								Лет на рынке
-							</span>
-						</li>
-					</ul>
+							</dt>
+							<dd className="text-5xl font-semibold">1000+</dd>
+						</div>
+						<div className="flex flex-col items-center gap-1">
+							<dt className="text-2xl font-medium text-silver">Лет на рынке</dt>
+							<dd className="text-5xl font-semibold">6</dd>
+						</div>
+					</dl>
 
-					<ul className="w-full flex justify-between pt-20 text-7xl">
-						<li className="flex flex-col justify-center items-center">
-							<div className="flex justify-center items-center gap-4 font-semibold">
-								<HeartIcon className="w-14 h-14" />
-								<span>Гарантия</span>
+					<dl className="grid w-full gap-10 pt-12 text-center sm:grid-cols-2">
+						<div className="flex flex-col items-center justify-center">
+							<div className="flex items-center justify-center gap-4 font-semibold">
+								<HeartIcon className="h-14 w-14" />
+								<dt className="text-3xl font-semibold">Гарантия</dt>
 							</div>
-							<span className="text-2xl text-silver font-medium">1 год</span>
-						</li>
-						<li className="flex flex-col justify-center items-center">
-							<div className="flex justify-center items-center gap-4 font-semibold">
-								<DeliveryIcon className="w-14 h-14" />
-								<span>Доставка</span>
+							<dd className="text-2xl font-medium text-silver">1 год</dd>
+						</div>
+						<div className="flex flex-col items-center justify-center">
+							<div className="flex items-center justify-center gap-4 font-semibold">
+								<DeliveryIcon className="h-14 w-14" />
+								<dt className="text-3xl font-semibold">Доставка</dt>
 							</div>
-							<span className="text-2xl text-silver font-medium">
+							<dd className="text-2xl font-medium text-silver">
 								по всей РФ и РБ
-							</span>
-						</li>
-					</ul>
+							</dd>
+						</div>
+					</dl>
 				</section>
-				<section className="w-full flex flex-col gap-15 px-34 pt-20">
-					{" "}
-					<h2 className="text-5xl text-center font-semibold">
+				<section className="w-full max-w-3xl flex flex-col gap-10 pt-10 mx-auto">
+					<h2 className="text-center text-5xl font-semibold">
 						Присмотрел что-то? <br /> заполни форму!
 					</h2>
-					<div className="w-full flex flex-col justify-center items-center bg-carbon p-8 gap-4 rounded-3xl">
-						<div className="w-full flex items-center gap-5 rounded-2xl bg-ink p-8">
+					<form className="flex w-full flex-col items-center gap-4 rounded-3xl bg-carbon p-8">
+						<div className="flex w-full items-center gap-5 rounded-2xl bg-ink p-8">
 							<UserIcon className="h-7 w-7 text-silver" />
-							<input
-								type="text"
-								placeholder="Имя"
-								className="w-full bg-transparent text-white text-2xl placeholder-silver
-  outline-none font-medium"
-							/>
+							<div className="w-full">
+								<label className="sr-only" htmlFor="name">
+									Имя
+								</label>
+								<input
+									id="name"
+									name="name"
+									type="text"
+									placeholder="Имя"
+									className="w-full bg-transparent text-2xl font-medium text-white outline-none placeholder-silver"
+								/>
+							</div>
 						</div>
-						<div className="w-full flex items-center gap-5 rounded-2xl bg-ink p-8">
+						<div className="flex w-full items-center gap-5 rounded-2xl bg-ink p-8">
 							<SendIcon className="h-7 w-7 text-silver" />
-							<input
-								type="text"
-								placeholder="Ваш Telegram для связи"
-								className="w-full bg-transparent text-white text-2xl placeholder-silver
-  outline-none font-medium"
-							/>
+							<div className="w-full">
+								<label className="sr-only" htmlFor="telegram">
+									Ваш Telegram для связи
+								</label>
+								<input
+									id="telegram"
+									name="telegram"
+									type="text"
+									placeholder="Ваш Telegram для связи"
+									className="w-full bg-transparent text-2xl font-medium text-white outline-none placeholder-silver"
+								/>
+							</div>
 						</div>
-						<div className="w-full flex items-center gap-5 rounded-2xl bg-ink p-8">
+						<div className="flex w-full items-center gap-5 rounded-2xl bg-ink p-8">
 							<PhoneIcon className="h-7 w-7 text-silver" />
-							<input
-								type="text"
-								placeholder="Номер телефона"
-								className="w-full bg-transparent text-white text-2xl placeholder-silver
-  outline-none font-medium"
-							/>
+							<div className="w-full">
+								<label className="sr-only" htmlFor="phone">
+									Номер телефона
+								</label>
+								<input
+									id="phone"
+									name="phone"
+									type="text"
+									placeholder="Номер телефона"
+									className="w-full bg-transparent text-2xl font-medium text-white outline-none placeholder-silver"
+								/>
+							</div>
 						</div>
-						<div className="w-full flex items-center gap-5 rounded-2xl bg-ink p-8">
+						<div className="flex w-full items-center gap-5 rounded-2xl bg-ink p-8">
 							<ChatBubbleIcon className="h-7 w-7 text-silver" />
-							<input
-								type="text"
-								placeholder="Электронная почта"
-								className="w-full bg-transparent text-white text-2xl placeholder-silver
-  outline-none font-medium"
-							/>
+							<div className="w-full">
+								<label className="sr-only" htmlFor="email">
+									Электронная почта
+								</label>
+								<input
+									id="email"
+									name="email"
+									type="email"
+									placeholder="Электронная почта"
+									className="w-full bg-transparent text-2xl font-medium text-white outline-none placeholder-silver"
+								/>
+							</div>
 						</div>
-						<div className="w-full flex items-center gap-5 rounded-2xl bg-ink p-8">
+						<div className="flex w-full items-center gap-5 rounded-2xl bg-ink p-8">
 							<CityIcon className="h-7 w-7 text-silver" />
-							<input
-								type="text"
-								placeholder="Город"
-								className="w-full bg-transparent text-white text-2xl placeholder-silver
-  outline-none font-medium"
-							/>
+							<div className="w-full">
+								<label className="sr-only" htmlFor="city">
+									Город
+								</label>
+								<input
+									id="city"
+									name="city"
+									type="text"
+									placeholder="Город"
+									className="w-full bg-transparent text-2xl font-medium text-white outline-none placeholder-silver"
+								/>
+							</div>
 						</div>
 
-						<div className="w-full flex flex-col justify-center items-center mt-6 gap-3">
-							<label className="relative inline-flex items-center gap-2 cursor-pointer">
+						<div className="mt-6 flex w-full flex-col items-center justify-center gap-3">
+							<label
+								className="relative inline-flex cursor-pointer items-center gap-2"
+								htmlFor="consent"
+							>
 								<input
+									id="consent"
 									type="checkbox"
 									defaultChecked
 									className="peer sr-only"
 								/>
-								<span
-									className="flex h-8 w-8 items-center justify-center
-  rounded-full bg-ink transition"
-								>
-									<span
-										className="h-4 w-4 rounded-full bg-azure
-  transition peer-checked:bg-azure"
-									/>
+								<span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink transition">
+									<span className="h-4 w-4 rounded-full bg-azure transition peer-checked:bg-azure" />
 								</span>
 								<span className="text-base font-semibold">
 									Я согласен на обработку персональных данных
 								</span>
 							</label>
-							<button className="w-full cursor-pointer rounded-2xl bg-hero-gradient p-7 text-2xl font-medium">
+							<button
+								type="submit"
+								className="w-full cursor-pointer rounded-2xl bg-hero-gradient p-7 text-2xl font-medium"
+							>
 								Отправить форму
 							</button>
 						</div>
-					</div>
+					</form>
 				</section>
-				<section className="w-full flex flex-col gap-5 py-20">
-					<h2 className="text-5xl text-center font-semibold">Мы на карте </h2>
-					<div className="w-full bg-gray-300 rounded-[3rem] h-134"></div>
+				<section className="flex w-full flex-col gap-5 py-10">
+					<h2 className="text-center text-5xl font-semibold">Мы на карте</h2>
+					<div className="h-134 w-full rounded-[3rem] bg-gray-300"></div>
 				</section>
 			</main>
 
 			<footer className="bg-hero-gradient py-16">
-				<div className="flex justify-between items-center max-w-5xl mx-auto">
+				<div className={`${PAGE_CONTAINER} flex items-center justify-between`}>
 					<div className="flex flex-col gap-4">
 						<div className="flex justify-between">
 							<VkIcon className="h-14 w-14" />
@@ -245,11 +281,12 @@ export default function Home() {
 						</div>
 						<span className="text-3xl font-semibold">+7 (917) 354 43-34</span>
 					</div>
-					<button className="rounded-3xl bg-white text-azure py-6 px-10 text-2xl font-semibold cursor-pointer">
+					<button className="cursor-pointer rounded-3xl bg-white px-10 py-6 text-2xl font-semibold text-azure">
 						Написать нам
 					</button>
 				</div>
 			</footer>
-		</div>
+			<BackgroundGlow />
+		</>
 	);
 }
