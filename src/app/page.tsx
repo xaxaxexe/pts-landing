@@ -21,7 +21,7 @@ export default function Home() {
 	return (
 		<>
 			<BackgroundGlow />
-			<header className={`w-full max-w-3xl pt-10 pb-15 mx-auto px-5 lg:px-2`}>
+			<header className={`w-full max-w-5xl pt-10 pb-15 mx-auto px-5 lg:px-2`}>
 				<Navbar />
 			</header>
 			<main
@@ -44,7 +44,10 @@ export default function Home() {
 					</div>
 				</section>
 
-				<section className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto">
+				<section
+					id="catalog"
+					className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto"
+				>
 					<ProductSection title="PTS LOW">
 						<ProductCard
 							title="PTS PC #1"
