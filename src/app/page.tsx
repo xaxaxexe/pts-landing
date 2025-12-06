@@ -20,6 +20,7 @@ const PAGE_CONTAINER = "mx-auto w-full max-w-6xl px-5 lg:px-2";
 export default function Home() {
 	return (
 		<>
+			<BackgroundGlow />
 			<header
 				className={`w-full max-w-3xl relative z-10 pt-10 pb-15 mx-auto px-5 lg:px-2`}
 			>
@@ -296,12 +297,11 @@ export default function Home() {
 							+7 (917) 354 43-34
 						</span>
 					</div>
-					<button className="cursor-pointer rounded-xl sm:rounded-3xl bg-white px-6 sm:px-10 py-3 sm:py-6 text-xl sm:text-2xl font-semibold text-azure">
+					<button className="cursor-pointer rounded-xl sm:rounded-3xl bg-white px-6 sm:px-10 py-3 sm:py-6 text-base sm:text-2xl font-semibold text-azure">
 						Написать нам
 					</button>
 				</div>
 			</footer>
-			{/* <BackgroundGlow /> */}
 		</>
 	);
 }

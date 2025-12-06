@@ -10,10 +10,10 @@ export default function Navbar() {
 				<img src="/logo.png" alt="POWERTECHSTORE" className="w-20 sm:w-24" />
 				<div className="flex flex-col items-end gap-2">
 					<div className="flex items-center gap-3">
-						<VkIcon className="h-6 w-6 sm:h-8 sm:w-8" />
-						<TelegramIcon className="h-6 w-6 sm:h-8 sm:w-8" />
-						<YoutubeIcon className="h-6 w-6 sm:h-8 sm:w-8" />
-						<AvitoIcon className="h-6 w-6 sm:h-8 sm:w-8" />
+						<VkIcon className="h-8 w-8" />
+						<TelegramIcon className="h-8 w-8" />
+						<YoutubeIcon className="h-8 w-8" />
+						<AvitoIcon className="h-8 w-8" />
 					</div>
 					<span className="text-sm sm:text-base font-semibold leading-tight">
 						+7 (917) 354 43-34

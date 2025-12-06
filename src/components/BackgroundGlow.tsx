@@ -1,7 +1,7 @@
 export default function BackgroundGlow() {
 	return (
 		<div
-			className="pointer-events-none absolute left-1/2 -top-40 -translate-x-1/2"
+			className="fixed -z-10 pointer-events-none left-1/2 -top-40 -translate-x-1/2"
 			aria-hidden
 		>
 			<div
