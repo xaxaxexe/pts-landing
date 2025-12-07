@@ -180,7 +180,7 @@ export default function ContactForm() {
 							value={formik.values.name}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
-							className="w-full bg-transparent text-sm sm:text-xl xl:text-2xl font-medium text-white outline-none placeholder-silver"
+							className="w-full bg-transparent sm:text-xl xl:text-2xl font-medium text-white outline-none placeholder-silver"
 						/>
 					</div>
 				</div>
