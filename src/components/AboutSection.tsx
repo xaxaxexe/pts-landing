@@ -42,17 +42,17 @@ export default function AboutSection() {
 
 			<dl className="flex flex-col justify-around items-center w-full gap-10 pt-5 sm:pt-12 text-center sm:flex-row">
 				<div className="flex flex-col items-center justify-center">
-					<div className="flex items-center justify-center gap-2 lg:gap-4 font-semibold">
+					<dt className="flex items-center justify-center gap-2 lg:gap-4 text-4xl lg:text-3xl font-semibold">
 						<HeartIcon className="w-10 h-10 lg:h-14 lg:w-14" />
-						<dt className="text-4xl lg:text-3xl font-semibold">Гарантия</dt>
-					</div>
+						<span>Гарантия</span>
+					</dt>
 					<dd className="text-xl lg:text-2xl font-medium text-silver">1 год</dd>
 				</div>
 				<div className="flex flex-col items-center justify-center">
-					<div className="flex items-center justify-center gap-2 lg:gap-4  font-semibold">
+					<dt className="flex items-center justify-center gap-2 lg:gap-4 text-4xl lg:text-3xl font-semibold">
 						<DeliveryIcon className="w-10 h-10 lg:h-14 lg:w-14" />
-						<dt className="text-4xl lg:text-3xl font-semibold">Доставка</dt>
-					</div>
+						<span>Доставка</span>
+					</dt>
 					<dd className="text-xl lg:text-2xl font-medium text-silver">
 						по всей РФ и РБ
 					</dd>

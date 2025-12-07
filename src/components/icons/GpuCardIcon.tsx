@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import { useId, type SVGProps } from "react";
 
 export default function GpuCardIcon({
 	width = 24,
@@ -6,7 +6,7 @@ export default function GpuCardIcon({
 	className,
 	...props
 }: SVGProps<SVGSVGElement>) {
-	const clipId = "gpu-card-clip";
+	const clipId = useId();
 	return (
 		<svg
 			viewBox="0 0 16 16"
