@@ -52,7 +52,7 @@ export default function Footer() {
 					</a>
 				</div>
 				<a
-					href="https://wa.me/79173544334"
+					href="https://t.me/powertechstore102"
 					target="_blank"
 					rel="noreferrer"
 					className="cursor-pointer rounded-xl sm:rounded-3xl bg-white px-6 sm:px-8 xl:px-10 py-3 sm:py-6 text-base sm:text-2xl font-semibold text-azure transition-all duration-300 hover:bg-gray-100 
