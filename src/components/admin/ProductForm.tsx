@@ -71,6 +71,34 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 		}
 	};
 
+	const handleDeleteImage = async () => {
+		if (!image) return;
+
+		try {
+			const response = await fetch(
+				`/api/upload?url=${encodeURIComponent(image)}`,
+				{
+					method: "DELETE",
+				}
+			);
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error || "Ошибка при удалении файла");
+			}
+
+			setImage("");
+			setSelectedFile(null);
+			setMessage({ type: "success", text: "Изображение удалено!" });
+		} catch (error) {
+			setMessage({
+				type: "error",
+				text: error instanceof Error ? error.message : "Ошибка удаления",
+			});
+		}
+	};
+
 	const addMemoryOption = () => {
 		setMemoryOptions([...memoryOptions, { value: "", price: 0 }]);
 	};
@@ -303,7 +331,18 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 						</div>
 						{image && (
 							<div className="flex w-full flex-col gap-2 rounded-2xl bg-ink p-4">
-								<span className="text-sm font-medium text-silver">Превью:</span>
+								<div className="flex items-center justify-between">
+									<span className="text-sm font-medium text-silver">
+										Превью:
+									</span>
+									<button
+										type="button"
+										onClick={handleDeleteImage}
+										className="rounded-lg bg-red-500/20 px-3 py-1.5 text-sm font-semibold text-red-400 transition hover:bg-red-500 hover:text-white"
+									>
+										✕ Удалить
+									</button>
+								</div>
 								<img
 									src={image}
 									alt="Preview"

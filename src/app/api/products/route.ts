@@ -4,9 +4,14 @@ import Product from "@/models/Product";
 import { unlink } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
+import { verifyAdminTokenFromRequest } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
 	try {
+		if (!verifyAdminTokenFromRequest(request)) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+
 		await connectDB();
 
 		const body = await request.json();
@@ -210,6 +215,10 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
 	try {
+		if (!verifyAdminTokenFromRequest(request)) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+
 		await connectDB();
 
 		const { searchParams } = new URL(request.url);

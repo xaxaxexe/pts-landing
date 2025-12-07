@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useFormik } from "formik";
 import { z } from "zod";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
@@ -63,6 +64,10 @@ type ContactFormValues = z.infer<typeof contactSchema>;
 export default function ContactForm() {
 	const { selectedProduct, clearSelectedProduct } = useSelectedProduct();
 	const [createOrder, { isLoading }] = useCreateOrderMutation();
+	const [message, setMessage] = useState<{
+		text: string;
+		type: "success" | "error";
+	} | null>(null);
 
 	const formik = useFormik<ContactFormValues>({
 		initialValues: {
@@ -89,6 +94,7 @@ export default function ContactForm() {
 			}
 		},
 		onSubmit: async (values, { resetForm }) => {
+			setMessage(null);
 			try {
 				const orderData = {
 					name: values.name,
@@ -112,16 +118,18 @@ export default function ContactForm() {
 
 				const result = await createOrder(orderData).unwrap();
 
-				alert(result.message || "Заявка успешно отправлена!");
+				setMessage({
+					text: result.message || "Заявка успешно отправлена!",
+					type: "success",
+				});
 				resetForm();
 				clearSelectedProduct();
 			} catch (error: any) {
 				console.error("Error submitting form:", error);
-				alert(
-					`Ошибка: ${
-						error.data?.message || "Произошла ошибка при отправке формы"
-					}`
-				);
+				setMessage({
+					text: error.data?.message || "Произошла ошибка при отправке формы",
+					type: "error",
+				});
 			}
 		},
 	});
@@ -379,6 +387,18 @@ export default function ContactForm() {
 					>
 						{isLoading ? "Отправка..." : "Отправить форму"}
 					</button>
+
+					{message && (
+						<div
+							className={`w-full rounded-xl p-4 text-center text-sm sm:text-base font-semibold ${
+								message.type === "success"
+									? "bg-green-500/20 text-green-400"
+									: "bg-red-500/20 text-red-400"
+							}`}
+						>
+							{message.text}
+						</div>
+					)}
 				</div>
 			</form>
 		</section>

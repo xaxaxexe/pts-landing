@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import connectDB from "@/lib/mongodb";
 import Order from "@/models/Order";
+import { verifyAdminTokenFromRequest } from "@/lib/auth";
 
 const createOrderSchema = z.object({
 	name: z.string().min(2, "Имя должно содержать минимум 2 символа"),
@@ -108,6 +109,13 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
 	try {
+		if (!verifyAdminTokenFromRequest(request)) {
+			return NextResponse.json(
+				{ success: false, message: "Unauthorized" },
+				{ status: 401 }
+			);
+		}
+
 		await connectDB();
 
 		const { searchParams } = new URL(request.url);

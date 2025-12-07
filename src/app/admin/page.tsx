@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import ProductForm from "@/components/admin/ProductForm";
 import ProductList from "@/components/admin/ProductList";
 import OrderList from "@/components/admin/OrderList";
@@ -8,6 +9,7 @@ import OrderList from "@/components/admin/OrderList";
 type Tab = "orders" | "products";
 
 export default function AdminPage() {
+	const router = useRouter();
 	const [activeTab, setActiveTab] = useState<Tab>("orders");
 	const [refreshKey, setRefreshKey] = useState(0);
 
@@ -15,12 +17,27 @@ export default function AdminPage() {
 		setRefreshKey((prev) => prev + 1);
 	};
 
+	const handleLogout = async () => {
+		try {
+			await fetch("/api/auth/logout", { method: "POST" });
+			router.push("/admin/login");
+			router.refresh();
+		} catch (error) {
+			console.error("Logout error:", error);
+		}
+	};
+
 	return (
 		<div className="min-h-screen bg-background">
 			<div className="mx-auto w-full max-w-7xl px-5 py-10 lg:px-2">
-				<h1 className="mb-10 text-center text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-					Админ-панель
-				</h1>
+				<div className="mb-10 flex items-center justify-end">
+					<button
+						onClick={handleLogout}
+						className="rounded-xl bg-red-500/20 px-4 py-2 text-sm font-semibold text-red-400 transition hover:bg-red-500 hover:text-white sm:px-6 sm:py-3 sm:text-base"
+					>
+						Выйти
+					</button>
+				</div>
 
 				<div className="mb-8 flex justify-center gap-4">
 					<button
