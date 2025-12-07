@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import type { Category, Spec, SpecOption, ColorOption } from "@/types/product";
 
 interface ProductFormProps {
@@ -9,7 +8,7 @@ interface ProductFormProps {
 }
 
 export default function ProductForm({ onProductAdded }: ProductFormProps) {
-	const [category, setCategory] = useState<Category>("PTS LOW");
+	const [category, setCategory] = useState<Category>("");
 	const [title, setTitle] = useState("");
 	const [price, setPrice] = useState("");
 	const [image, setImage] = useState("");
@@ -169,11 +168,15 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 			!cpu.trim() ||
 			!gpu.trim() ||
 			filledMemoryOptions.length === 0 ||
-			filledSsdOptions.length === 0
+			filledSsdOptions.length === 0 ||
+			!category.trim() ||
+			!title.trim() ||
+			!price.trim() ||
+			!image
 		) {
 			setMessage({
 				type: "error",
-				text: "Заполните все обязательные поля",
+				text: "Заполните все обязательные поля и добавьте изображение",
 			});
 			setIsLoading(false);
 			return;
@@ -209,6 +212,7 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 			}
 
 			setMessage({ type: "success", text: "Товар успешно добавлен!" });
+			setCategory("");
 			setTitle("");
 			setPrice("");
 			setImage("");
@@ -247,22 +251,15 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 						<label className="sr-only" htmlFor="category">
 							Категория
 						</label>
-						<select
+						<input
 							id="category"
+							type="text"
+							placeholder="Категория (например: PTS LOW)"
 							value={category}
-							onChange={(e) => setCategory(e.target.value as Category)}
-							className="w-full bg-transparent text-sm font-medium text-white outline-none sm:text-xl xl:text-2xl"
-						>
-							<option value="PTS LOW" className="bg-ink">
-								PTS LOW
-							</option>
-							<option value="PTS MEDIUM" className="bg-ink">
-								PTS MEDIUM
-							</option>
-							<option value="PTS PRO" className="bg-ink">
-								PTS PRO
-							</option>
-						</select>
+							onChange={(e) => setCategory(e.target.value)}
+							required
+							className="w-full bg-transparent text-sm font-medium text-white outline-none placeholder-silver sm:text-xl xl:text-2xl"
+						/>
 					</div>
 				</div>
 

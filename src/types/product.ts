@@ -1,5 +1,5 @@
 export type SpecType = "cpu" | "gpu" | "memory" | "ssd" | "color";
-export type Category = "PTS LOW" | "PTS MEDIUM" | "PTS PRO";
+export type Category = string;
 export type SpecIcon = "memory" | "gpu" | "cpu" | "ssd";
 export type ColorValue = "black" | "white";
 

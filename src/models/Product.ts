@@ -90,7 +90,7 @@ const ProductSchema = new Schema<IProduct>(
 		category: {
 			type: String,
 			required: true,
-			enum: ["PTS LOW", "PTS MEDIUM", "PTS PRO"],
+			trim: true,
 		},
 		title: {
 			type: String,

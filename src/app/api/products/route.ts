@@ -24,13 +24,6 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		if (!["PTS LOW", "PTS MEDIUM", "PTS PRO"].includes(category)) {
-			return NextResponse.json(
-				{ error: "Invalid category. Must be PTS LOW, PTS MEDIUM, or PTS PRO" },
-				{ status: 400 }
-			);
-		}
-
 		if (!Array.isArray(specs) || specs.length === 0) {
 			return NextResponse.json(
 				{ error: "Specs must be a non-empty array" },
@@ -169,14 +162,6 @@ export async function GET(request: NextRequest) {
 
 		let query = {};
 		if (category) {
-			if (!["PTS LOW", "PTS MEDIUM", "PTS PRO"].includes(category)) {
-				return NextResponse.json(
-					{
-						error: "Invalid category. Must be PTS LOW, PTS MEDIUM, or PTS PRO",
-					},
-					{ status: 400 }
-				);
-			}
 			query = { category };
 		}
 
@@ -187,13 +172,17 @@ export async function GET(request: NextRequest) {
 			const indexA = categoryOrder.indexOf(a.category);
 			const indexB = categoryOrder.indexOf(b.category);
 
-			if (indexA === indexB) {
-				return (
-					new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-				);
+			const bothKnown = indexA !== -1 && indexB !== -1;
+			if (bothKnown) {
+				if (indexA === indexB) {
+					return (
+						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					);
+				}
+				return indexA - indexB;
 			}
 
-			return indexA - indexB;
+			return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 		});
 
 		return NextResponse.json(
