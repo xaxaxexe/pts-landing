@@ -41,9 +41,11 @@ export async function POST(request: NextRequest) {
 				);
 			}
 
-			if (!["cpu", "gpu", "memory", "ssd"].includes(spec.type)) {
+			if (!["cpu", "gpu", "memory", "ssd", "color"].includes(spec.type)) {
 				return NextResponse.json(
-					{ error: "Invalid spec type. Must be cpu, gpu, memory, or ssd" },
+					{
+						error: "Invalid spec type. Must be cpu, gpu, memory, ssd, or color",
+					},
 					{ status: 400 }
 				);
 			}
@@ -86,6 +88,41 @@ export async function POST(request: NextRequest) {
 						return NextResponse.json(
 							{
 								error: `Each ${spec.type} option must have value and price`,
+							},
+							{ status: 400 }
+						);
+					}
+				}
+			}
+
+			if (spec.type === "color") {
+				if (spec.value || spec.options) {
+					return NextResponse.json(
+						{ error: "color should not have value or options" },
+						{ status: 400 }
+					);
+				}
+				if (
+					!spec.colorOptions ||
+					!Array.isArray(spec.colorOptions) ||
+					spec.colorOptions.length === 0
+				) {
+					return NextResponse.json(
+						{ error: "color must have at least one colorOption" },
+						{ status: 400 }
+					);
+				}
+
+				for (const colorOption of spec.colorOptions) {
+					if (
+						!colorOption.color ||
+						!["black", "white"].includes(colorOption.color) ||
+						typeof colorOption.price !== "number"
+					) {
+						return NextResponse.json(
+							{
+								error:
+									"Each color option must have color (black or white) and price",
 							},
 							{ status: 400 }
 						);

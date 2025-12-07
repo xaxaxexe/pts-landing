@@ -12,6 +12,9 @@ const iconMap: Record<SpecType, React.ReactElement> = {
 	gpu: <GpuCardIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
 	cpu: <ProcessorIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
 	ssd: <SsdIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
+	color: (
+		<div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-linear-to-r from-black to-white border border-white" />
+	),
 };
 
 export default function ProductList() {

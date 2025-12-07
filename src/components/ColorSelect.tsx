@@ -1,24 +1,19 @@
 "use client";
 
-import { ReactNode, useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import RadioButton from "@/components/ui/RadioButton";
-import type { SpecOption } from "@/types/product";
+import type { ColorOption } from "@/types/product";
 
-interface SpecSelectProps {
-	icon: ReactNode;
+interface ColorSelectProps {
 	label: string;
-	value: string;
-	options?: SpecOption[];
+	colorOptions: ColorOption[];
 }
 
-export default function SpecSelect({
-	icon,
-	label,
-	value,
-	options = [],
-}: SpecSelectProps) {
-	const [selectedValue, setSelectedValue] = useState(value);
+export default function ColorSelect({ label, colorOptions }: ColorSelectProps) {
+	const [selectedColor, setSelectedColor] = useState(
+		colorOptions[0]?.color || "black"
+	);
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +36,10 @@ export default function SpecSelect({
 		};
 	}, [isOpen]);
 
+	const selectedOption = colorOptions.find(
+		(opt) => opt.color === selectedColor
+	);
+
 	return (
 		<div className="relative" ref={dropdownRef}>
 			<button
@@ -51,8 +50,14 @@ export default function SpecSelect({
 				aria-expanded={isOpen}
 			>
 				<div className="flex gap-2 items-center">
-					{icon}
-					<span className="text-base font-medium">{selectedValue}</span>
+					<div
+						className={`w-5 h-5 rounded-full  ${
+							selectedColor === "black" ? "bg-black " : "bg-white "
+						}`}
+					/>
+					<span className="text-base font-medium">
+						{selectedColor === "black" ? "Черный" : "Белый"}
+					</span>
 				</div>
 				<ChevronDownIcon
 					className={`w-4 h-4 text-graphite transition-transform ${
@@ -61,28 +66,35 @@ export default function SpecSelect({
 				/>
 			</button>
 
-			{isOpen && options.length > 0 && (
-				<ul className="absolute max-h-64 ld:max-h-52 overflow-y-auto top-full left-0 right-0 mt-2 bg-ink border-2 border-border rounded-xl p-4 shadow-xl z-50">
-					{options.map((option, index) => (
+			{isOpen && colorOptions.length > 0 && (
+				<ul className="absolute max-h-64 overflow-y-auto top-full left-0 right-0 mt-2 bg-ink border-2 border-border rounded-xl p-4 shadow-xl z-50">
+					{colorOptions.map((option, index) => (
 						<li
-							key={`${option.value}-${index}`}
+							key={`${option.color}-${index}`}
 							className={`group flex justify-between cursor-pointer ${
 								index === 0
-									? options.length > 1
+									? colorOptions.length > 1
 										? "pb-3 border-b border-border"
 										: ""
-									: index === options.length - 1
+									: index === colorOptions.length - 1
 									? "pt-3"
 									: "py-3 border-b border-border"
 							}`}
 							onClick={() => {
-								setSelectedValue(option.value);
+								setSelectedColor(option.color);
 								setIsOpen(false);
 							}}
 						>
 							<div className="flex flex-col">
-								<div className="flex gap-2">
-									{icon} <span className="text-base">{option.value}</span>
+								<div className="flex gap-2 items-center">
+									<div
+										className={`w-4.5 h-4.5 rounded-full ${
+											option.color === "black" ? "bg-black" : "bg-white"
+										}`}
+									/>
+									<span className="text-base">
+										{option.color === "black" ? "Черный" : "Белый"}
+									</span>
 								</div>
 								{option.price >= 0 && (
 									<span className="text-sm text-ash font-medium">
@@ -91,10 +103,10 @@ export default function SpecSelect({
 								)}
 							</div>
 							<RadioButton
-								id={`option-${index}`}
-								name={`spec-select-${label}`}
-								checked={selectedValue === option.value}
-								onChange={() => setSelectedValue(option.value)}
+								id={`color-option-${index}`}
+								name="color-select"
+								checked={selectedColor === option.color}
+								onChange={() => setSelectedColor(option.color)}
 							/>
 						</li>
 					))}

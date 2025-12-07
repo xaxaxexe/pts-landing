@@ -1,9 +1,15 @@
-export type SpecType = "cpu" | "gpu" | "memory" | "ssd";
+export type SpecType = "cpu" | "gpu" | "memory" | "ssd" | "color";
 export type Category = "PTS LOW" | "PTS MEDIUM" | "PTS PRO";
 export type SpecIcon = "memory" | "gpu" | "cpu" | "ssd";
+export type ColorValue = "black" | "white";
 
 export interface SpecOption {
 	value: string;
+	price: number;
+}
+
+export interface ColorOption {
+	color: ColorValue;
 	price: number;
 }
 
@@ -16,6 +22,7 @@ export interface Spec {
 	type: SpecType;
 	value?: string;
 	options?: SpecOption[];
+	colorOptions?: ColorOption[];
 }
 
 export interface Product {

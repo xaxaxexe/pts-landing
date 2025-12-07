@@ -48,9 +48,9 @@ export default function ProductCard({
 					<span className="font-semibold leading-tight">{price} р.</span>
 				</div>
 				<ul className="flex flex-col gap-2">
-					{specs.map((spec) => (
+					{specs.map((spec, index) => (
 						<li
-							key={`${title}-${spec.label}`}
+							key={`${title}-${spec.label}-${index}`}
 							className="flex items-center justify-start gap-2 text-xs text-graphite sm:text-sm"
 						>
 							{iconMap[spec.icon]}
@@ -64,7 +64,7 @@ export default function ProductCard({
 					</button>
 					<button
 						onClick={() => setIsModalOpen(true)}
-						className="cursor-pointer rounded-2xl bg-slate-24 px-4 py-3 text-sm font-semibold sm:text-base"
+						className="cursor-pointer rounded-2xl bg-slate-24 px-6 h-full text-sm font-semibold sm:text-base"
 					>
 						<SettingsIcon className="h-5 w-5 sm:h-6 sm:w-6" />
 					</button>

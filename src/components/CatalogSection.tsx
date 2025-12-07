@@ -6,13 +6,15 @@ import { useGetProductsQuery } from "@/store/api/productsApi";
 import type { Spec } from "@/types/product";
 
 const formatSpecsForCard = (specs: Spec[]) => {
-	return specs.map((spec) => ({
-		icon: spec.type,
-		label:
-			spec.type === "cpu" || spec.type === "gpu"
-				? spec.value || ""
-				: spec.options?.[0]?.value || "",
-	}));
+	return specs
+		.filter((spec) => spec.type !== "color")
+		.map((spec) => ({
+			icon: spec.type as "cpu" | "gpu" | "memory" | "ssd",
+			label:
+				spec.type === "cpu" || spec.type === "gpu"
+					? spec.value || ""
+					: spec.options?.[0]?.value || "",
+		}));
 };
 
 export default function CatalogSection() {

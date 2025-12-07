@@ -4,6 +4,7 @@ import Portal from "@/components/Portal";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
 import SsdIcon from "@/components/icons/SsdIcon";
 import SpecSelect from "./SpecSelect";
+import ColorSelect from "./ColorSelect";
 import type { Product } from "@/types/product";
 
 interface ModalProps {
@@ -17,6 +18,7 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 
 	const memorySpec = productData.specs.find((spec) => spec.type === "memory");
 	const ssdSpec = productData.specs.find((spec) => spec.type === "ssd");
+	const colorSpec = productData.specs.find((spec) => spec.type === "color");
 
 	return (
 		<Portal lockScroll>
@@ -37,7 +39,7 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 									<SpecSelect
 										icon={<MemoryCardIcon className="w-5 h-5 text-white" />}
 										label="Оперативная память"
-										value={memorySpec.options[0]?.value || ""}
+										value={memorySpec.options[0]?.value}
 										options={memorySpec.options}
 									/>
 								)}
@@ -45,8 +47,14 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 									<SpecSelect
 										icon={<SsdIcon className="w-5 h-5 text-white" />}
 										label="SSD"
-										value={ssdSpec.options[0]?.value || ""}
+										value={ssdSpec.options[0]?.value}
 										options={ssdSpec.options}
+									/>
+								)}
+								{colorSpec && colorSpec.colorOptions && (
+									<ColorSelect
+										label="Цвет"
+										colorOptions={colorSpec.colorOptions}
 									/>
 								)}
 							</div>

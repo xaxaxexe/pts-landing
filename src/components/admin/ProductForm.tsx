@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
-import type { Category, Spec, SpecOption } from "@/types/product";
+import type { Category, Spec, SpecOption, ColorOption } from "@/types/product";
 
 interface ProductFormProps {
 	onProductAdded: () => void;
@@ -23,6 +23,10 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 	]);
 	const [ssdOptions, setSsdOptions] = useState<SpecOption[]>([
 		{ value: "", price: 0 },
+	]);
+	const [colorOptions, setColorOptions] = useState<ColorOption[]>([
+		{ color: "black", price: 0 },
+		{ color: "white", price: 0 },
 	]);
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -115,6 +119,12 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 		setSsdOptions(updated);
 	};
 
+	const updateColorOption = (index: number, price: number) => {
+		const updated = [...colorOptions];
+		updated[index].price = price;
+		setColorOptions(updated);
+	};
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
@@ -147,6 +157,7 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 				{ type: "gpu", value: gpu },
 				{ type: "memory", options: filledMemoryOptions },
 				{ type: "ssd", options: filledSsdOptions },
+				{ type: "color", colorOptions: colorOptions },
 			];
 
 			const response = await fetch("/api/products", {
@@ -178,6 +189,10 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 			setGpu("");
 			setMemoryOptions([{ value: "", price: 0 }]);
 			setSsdOptions([{ value: "", price: 0 }]);
+			setColorOptions([
+				{ color: "black", price: 0 },
+				{ color: "white", price: 0 },
+			]);
 			onProductAdded();
 		} catch (error) {
 			setMessage({
@@ -429,6 +444,39 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 												✕
 											</button>
 										)}
+									</div>
+								))}
+							</div>
+						</div>
+
+						<div className="w-full rounded-2xl bg-ink p-4">
+							<div className="mb-3">
+								<h4 className="text-sm font-semibold text-white sm:text-base">
+									Цвет (опции)
+								</h4>
+							</div>
+							<div className="flex flex-col gap-2">
+								{colorOptions.map((option, index) => (
+									<div key={index} className="flex gap-2 items-center">
+										<div
+											className={`w-8 h-8 rounded-full border-2 ${
+												option.color === "black"
+													? "bg-black border-white"
+													: "bg-white border-black"
+											}`}
+										/>
+										<span className="text-sm text-white font-medium flex-1">
+											{option.color === "black" ? "Черный" : "Белый"}
+										</span>
+										<input
+											type="number"
+											placeholder="Доп. цена"
+											value={option.price}
+											onChange={(e) =>
+												updateColorOption(index, Number(e.target.value))
+											}
+											className="w-24 rounded-lg bg-slate-24 p-2 text-sm text-white outline-none placeholder-silver sm:w-32"
+										/>
 									</div>
 								))}
 							</div>

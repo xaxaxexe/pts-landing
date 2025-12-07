@@ -1,12 +1,20 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import type { Category, SpecType, SpecOption } from "@/types/product";
+import type {
+	Category,
+	SpecType,
+	SpecOption,
+	ColorOption,
+} from "@/types/product";
 
 export interface ISpecOption extends SpecOption {}
+
+export interface IColorOption extends ColorOption {}
 
 export interface ISpec {
 	type: SpecType;
 	value?: string;
 	options?: ISpecOption[];
+	colorOptions?: IColorOption[];
 }
 
 export interface IProduct extends Document {
@@ -33,12 +41,27 @@ const SpecOptionSchema = new Schema<ISpecOption>(
 	{ _id: false }
 );
 
+const ColorOptionSchema = new Schema<IColorOption>(
+	{
+		color: {
+			type: String,
+			required: true,
+			enum: ["black", "white"],
+		},
+		price: {
+			type: Number,
+			required: true,
+		},
+	},
+	{ _id: false }
+);
+
 const SpecSchema = new Schema<ISpec>(
 	{
 		type: {
 			type: String,
 			required: true,
-			enum: ["cpu", "gpu", "memory", "ssd"],
+			enum: ["cpu", "gpu", "memory", "ssd", "color"],
 		},
 		value: {
 			type: String,
@@ -50,6 +73,12 @@ const SpecSchema = new Schema<ISpec>(
 			type: [SpecOptionSchema],
 			required: function (this: ISpec) {
 				return this.type === "memory" || this.type === "ssd";
+			},
+		},
+		colorOptions: {
+			type: [ColorOptionSchema],
+			required: function (this: ISpec) {
+				return this.type === "color";
 			},
 		},
 	},
