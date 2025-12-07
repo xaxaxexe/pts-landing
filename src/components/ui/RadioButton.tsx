@@ -3,6 +3,8 @@ interface RadioButtonProps {
 	name: string;
 	checked: boolean;
 	onChange: () => void;
+	focusable?: boolean;
+	ariaHidden?: boolean;
 }
 
 export default function RadioButton({
@@ -10,6 +12,8 @@ export default function RadioButton({
 	name,
 	checked,
 	onChange,
+	focusable = true,
+	ariaHidden = false,
 }: RadioButtonProps) {
 	return (
 		<label
@@ -22,6 +26,8 @@ export default function RadioButton({
 				name={name}
 				checked={checked}
 				onChange={onChange}
+				tabIndex={focusable ? 0 : -1}
+				aria-hidden={ariaHidden}
 				className="peer sr-only"
 			/>
 			<span className="flex w-7 h-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-slate-24 transition group-hover:bg-border">

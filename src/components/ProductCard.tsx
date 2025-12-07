@@ -35,12 +35,19 @@ export default function ProductCard({
 	productData,
 }: ProductCardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const { setSelectedProduct } = useSelectedProduct();
+	const { setSelectedProduct, focusForm } = useSelectedProduct();
 
 	const scrollToForm = () => {
 		const formElement = document.getElementById("contact-form");
 		if (formElement) {
 			formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+			requestAnimationFrame(() => {
+				setTimeout(() => {
+					focusForm();
+				}, 250);
+			});
+		} else {
+			focusForm();
 		}
 	};
 

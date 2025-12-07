@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import Portal from "@/components/Portal";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
 import SsdIcon from "@/components/icons/SsdIcon";
 import SpecSelect from "./SpecSelect";
 import ColorSelect from "./ColorSelect";
+import { handleEscape } from "@/lib/keyboard";
 import type { Product } from "@/types/product";
 
 interface ModalProps {
@@ -15,13 +16,27 @@ interface ModalProps {
 	productData: Product;
 }
 
+const getFocusableElements = (container: HTMLElement | null) => {
+	if (!container) return [] as HTMLElement[];
+	return Array.from(
+		container.querySelectorAll<HTMLElement>(
+			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+		)
+	).filter(
+		(el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden")
+	);
+};
+
 export default function Modal({ isOpen, onClose, productData }: ModalProps) {
-	const { setSelectedProduct } = useSelectedProduct();
+	const { setSelectedProduct, focusForm } = useSelectedProduct();
 	const [selectedOptions, setSelectedOptions] = useState<
 		Record<string, { value: string; price: number }>
 	>({});
 	const [isClosing, setIsClosing] = useState(false);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const dialogRef = useRef<HTMLDivElement>(null);
+	const previouslyFocusedElement = useRef<HTMLElement | null>(null);
+	const titleId = useId();
 
 	const memorySpec = productData.specs.find((spec) => spec.type === "memory");
 	const ssdSpec = productData.specs.find((spec) => spec.type === "ssd");
@@ -45,21 +60,74 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 			}
 			setSelectedOptions(initial);
 
-			// Запускаем анимацию появления
 			requestAnimationFrame(() => {
 				setIsAnimating(true);
 			});
 		}
 	}, [isOpen, memorySpec, ssdSpec, colorSpec]);
 
+	useEffect(() => {
+		if (!isOpen) return;
+
+		previouslyFocusedElement.current =
+			(document.activeElement as HTMLElement | null) || null;
+
+		const focusable = getFocusableElements(dialogRef.current);
+		if (focusable.length > 0) {
+			focusable[0].focus();
+		}
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (handleEscape(event, handleClose, { preventDefault: true })) {
+				return;
+			}
+
+			if (event.key === "Tab") {
+				const focusables = getFocusableElements(dialogRef.current);
+				if (focusables.length === 0) return;
+				const currentIndex = focusables.indexOf(
+					document.activeElement as HTMLElement
+				);
+				const lastIndex = focusables.length - 1;
+
+				if (event.shiftKey) {
+					if (currentIndex === -1 || currentIndex === 0) {
+						focusables[lastIndex].focus();
+						event.preventDefault();
+					}
+				} else {
+					if (currentIndex === lastIndex || currentIndex === -1) {
+						focusables[0].focus();
+						event.preventDefault();
+					}
+				}
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+			previouslyFocusedElement.current?.focus();
+		};
+	}, [isOpen]);
+
 	const scrollToForm = () => {
 		const formElement = document.getElementById("contact-form");
 		if (formElement) {
-			formElement.scrollIntoView({ block: "start" });
+			formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+			requestAnimationFrame(() => {
+				setTimeout(() => {
+					focusForm();
+				}, 250);
+			});
+		} else {
+			focusForm();
 		}
 	};
 
 	const handleClose = () => {
+		if (isClosing) return;
 		setIsClosing(true);
 		setTimeout(() => {
 			setIsClosing(false);
@@ -102,6 +170,9 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 				/>
 
 				<div
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby={titleId}
 					className={`relative z-10 w-full max-w-md mx-4 transition-all duration-300 ${
 						isClosing
 							? "opacity-0 scale-95 translate-y-4"
@@ -109,10 +180,14 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 							? "opacity-100 scale-100 translate-y-0"
 							: "opacity-0 scale-95 translate-y-4"
 					}`}
+					ref={dialogRef}
 				>
 					<div className="flex flex-col justify-between bg-carbon rounded-2xl lg:rounded-3xl p-6 lg:p-8 shadow-2xl min-h-128">
 						<div>
-							<h2 className="text-xl lg:text-2xl font-bold text-start text-white mb-5">
+							<h2
+								id={titleId}
+								className="text-xl lg:text-2xl font-bold text-start text-white mb-5"
+							>
 								Редактирование
 							</h2>
 							<div className="flex flex-col gap-4">

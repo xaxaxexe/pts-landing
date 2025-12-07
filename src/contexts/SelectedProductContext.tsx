@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+	createContext,
+	useContext,
+	useState,
+	ReactNode,
+	useRef,
+	useCallback,
+} from "react";
 
 import type { Spec } from "@/types/product";
 
@@ -29,6 +36,8 @@ interface SelectedProductContextType {
 	setSelectedProduct: (product: SelectedProduct | null) => void;
 	updateSelectedOptions: (options: SelectedOptions) => void;
 	clearSelectedProduct: () => void;
+	focusForm: () => void;
+	registerFormFocus: (handler: (() => void) | null) => void;
 }
 
 const SelectedProductContext = createContext<
@@ -38,6 +47,7 @@ const SelectedProductContext = createContext<
 export function SelectedProductProvider({ children }: { children: ReactNode }) {
 	const [selectedProduct, setSelectedProduct] =
 		useState<SelectedProduct | null>(null);
+	const focusHandler = useRef<(() => void) | null>(null);
 
 	const updateSelectedOptions = (options: SelectedOptions) => {
 		if (!selectedProduct) return;
@@ -59,6 +69,14 @@ export function SelectedProductProvider({ children }: { children: ReactNode }) {
 		setSelectedProduct(null);
 	};
 
+	const focusForm = useCallback(() => {
+		focusHandler.current?.();
+	}, []);
+
+	const registerFormFocus = useCallback((handler: (() => void) | null) => {
+		focusHandler.current = handler;
+	}, []);
+
 	return (
 		<SelectedProductContext.Provider
 			value={{
@@ -66,6 +84,8 @@ export function SelectedProductProvider({ children }: { children: ReactNode }) {
 				setSelectedProduct,
 				updateSelectedOptions,
 				clearSelectedProduct,
+				focusForm,
+				registerFormFocus,
 			}}
 		>
 			{children}

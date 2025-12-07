@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import { z } from "zod";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
@@ -62,12 +62,21 @@ const contactSchema = z.object({
 type ContactFormValues = z.infer<typeof contactSchema>;
 
 export default function ContactForm() {
-	const { selectedProduct, clearSelectedProduct } = useSelectedProduct();
+	const { selectedProduct, clearSelectedProduct, registerFormFocus } =
+		useSelectedProduct();
 	const [createOrder, { isLoading }] = useCreateOrderMutation();
 	const [message, setMessage] = useState<{
 		text: string;
 		type: "success" | "error";
 	} | null>(null);
+	const nameInputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		registerFormFocus(() => {
+			nameInputRef.current?.focus({ preventScroll: true });
+		});
+		return () => registerFormFocus(null);
+	}, [registerFormFocus]);
 
 	const formik = useFormik<ContactFormValues>({
 		initialValues: {
@@ -177,6 +186,7 @@ export default function ContactForm() {
 							name="name"
 							type="text"
 							placeholder="Имя"
+							ref={nameInputRef}
 							value={formik.values.name}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
@@ -369,7 +379,7 @@ export default function ContactForm() {
 							onBlur={formik.handleBlur}
 							className="peer sr-only"
 						/>
-						<span className="flex w-4 h-4 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-ink transition group-hover:bg-border">
+						<span className="flex w-4 h-4 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-ink transition group-hover:bg-border peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-azure">
 							<span
 								className={`w-2 h-2 sm:h-4 sm:w-4 rounded-full transition ${
 									formik.values.consent ? "bg-azure" : "bg-transparent"

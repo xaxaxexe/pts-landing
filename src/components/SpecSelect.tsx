@@ -1,9 +1,10 @@
 "use client";
 
-import { ReactNode, useState, useRef, useEffect } from "react";
+import { ReactNode, useState, useRef, useEffect, useId } from "react";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import RadioButton from "@/components/ui/RadioButton";
 import type { SpecOption } from "@/types/product";
+import { handleEscape } from "@/lib/keyboard";
 
 interface SpecSelectProps {
 	icon: ReactNode;
@@ -23,6 +24,29 @@ export default function SpecSelect({
 	const [selectedValue, setSelectedValue] = useState(value);
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const dropdownId = useId();
+	const listboxId = `${dropdownId}-listbox`;
+
+	const closeIfFocusLeaves = () => {
+		setTimeout(() => {
+			const activeElement = document.activeElement;
+			if (
+				dropdownRef.current &&
+				activeElement &&
+				dropdownRef.current.contains(activeElement)
+			) {
+				return;
+			}
+			setIsOpen(false);
+		}, 0);
+	};
+
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (!isOpen) return;
+		handleEscape(event, () => setIsOpen(false), {
+			stopPropagation: true,
+		});
+	};
 
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
@@ -44,13 +68,20 @@ export default function SpecSelect({
 	}, [isOpen]);
 
 	return (
-		<div className="relative" ref={dropdownRef}>
+		<div
+			className="relative"
+			ref={dropdownRef}
+			onBlur={closeIfFocusLeaves}
+			onKeyDown={handleKeyDown}
+		>
 			<button
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}
 				className="flex w-full items-center justify-between border-2 border-border bg-ink py-3 px-4 rounded-xl cursor-pointer hover:border-graphite transition-colors"
 				aria-label={label}
 				aria-expanded={isOpen}
+				aria-haspopup="listbox"
+				aria-controls={listboxId}
 			>
 				<div className="flex gap-2 items-center">
 					{icon}
@@ -64,10 +95,22 @@ export default function SpecSelect({
 			</button>
 
 			{isOpen && options.length > 0 && (
-				<ul className="absolute max-h-64 ld:max-h-52 overflow-y-auto top-full left-0 right-0 mt-2 bg-ink border-2 border-border rounded-xl p-4 shadow-xl z-50">
+				<ul
+					id={listboxId}
+					role="listbox"
+					aria-label={label}
+					aria-activedescendant={`${dropdownId}-option-${Math.max(
+						0,
+						options.findIndex((opt) => opt.value === selectedValue)
+					)}`}
+					className="absolute max-h-64 ld:max-h-52 overflow-y-auto top-full left-0 right-0 mt-2 bg-ink border-2 border-border rounded-xl p-4 shadow-xl z-50"
+				>
 					{options.map((option, index) => (
 						<li
 							key={`${option.value}-${index}`}
+							id={`${dropdownId}-option-${index}`}
+							role="option"
+							aria-selected={selectedValue === option.value}
 							className={`group flex justify-between cursor-pointer ${
 								index === 0
 									? options.length > 1
@@ -82,6 +125,24 @@ export default function SpecSelect({
 								setIsOpen(false);
 								onChange?.(option.value, option.price);
 							}}
+							onKeyDown={(event) => {
+								if (event.key === "Enter" || event.key === " ") {
+									event.preventDefault();
+									setSelectedValue(option.value);
+									setIsOpen(false);
+									onChange?.(option.value, option.price);
+								}
+							}}
+							tabIndex={0}
+							aria-label={`${option.value}${
+								option.price > 0
+									? `, доплата ${option.price.toLocaleString("ru-RU")} руб`
+									: option.price < 0
+									? `, скидка ${Math.abs(option.price).toLocaleString(
+											"ru-RU"
+									  )} руб`
+									: ""
+							}`}
 						>
 							<div className="flex flex-col">
 								<div className="flex gap-2">
@@ -98,6 +159,8 @@ export default function SpecSelect({
 								name={`spec-select-${label}`}
 								checked={selectedValue === option.value}
 								onChange={() => setSelectedValue(option.value)}
+								focusable={false}
+								ariaHidden
 							/>
 						</li>
 					))}

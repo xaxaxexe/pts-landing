@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import RadioButton from "@/components/ui/RadioButton";
 import type { ColorOption } from "@/types/product";
+import { handleEscape } from "@/lib/keyboard";
 
 interface ColorSelectProps {
 	label: string;
@@ -21,6 +22,29 @@ export default function ColorSelect({
 	);
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const dropdownId = useId();
+	const listboxId = `${dropdownId}-listbox`;
+
+	const closeIfFocusLeaves = () => {
+		setTimeout(() => {
+			const activeElement = document.activeElement;
+			if (
+				dropdownRef.current &&
+				activeElement &&
+				dropdownRef.current.contains(activeElement)
+			) {
+				return;
+			}
+			setIsOpen(false);
+		}, 0);
+	};
+
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (!isOpen) return;
+		handleEscape(event, () => setIsOpen(false), {
+			stopPropagation: true,
+		});
+	};
 
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
@@ -42,13 +66,20 @@ export default function ColorSelect({
 	}, [isOpen]);
 
 	return (
-		<div className="relative" ref={dropdownRef}>
+		<div
+			className="relative"
+			ref={dropdownRef}
+			onBlur={closeIfFocusLeaves}
+			onKeyDown={handleKeyDown}
+		>
 			<button
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}
 				className="flex w-full items-center justify-between border-2 border-border bg-ink py-3 px-4 rounded-xl cursor-pointer hover:border-graphite transition-colors"
 				aria-label={label}
 				aria-expanded={isOpen}
+				aria-haspopup="listbox"
+				aria-controls={listboxId}
 			>
 				<div className="flex gap-2 items-center">
 					<div
@@ -68,10 +99,22 @@ export default function ColorSelect({
 			</button>
 
 			{isOpen && colorOptions.length > 0 && (
-				<ul className="absolute max-h-64 overflow-y-auto top-full left-0 right-0 mt-2 bg-ink border-2 border-border rounded-xl p-4 shadow-xl z-50">
+				<ul
+					id={listboxId}
+					role="listbox"
+					aria-label={label}
+					aria-activedescendant={`${dropdownId}-option-${Math.max(
+						0,
+						colorOptions.findIndex((opt) => opt.color === selectedColor)
+					)}`}
+					className="absolute max-h-64 overflow-y-auto top-full left-0 right-0 mt-2 bg-ink border-2 border-border rounded-xl p-4 shadow-xl z-50"
+				>
 					{colorOptions.map((option, index) => (
 						<li
 							key={`${option.color}-${index}`}
+							id={`${dropdownId}-option-${index}`}
+							role="option"
+							aria-selected={selectedColor === option.color}
 							className={`group flex justify-between cursor-pointer ${
 								index === 0
 									? colorOptions.length > 1
@@ -86,6 +129,24 @@ export default function ColorSelect({
 								setIsOpen(false);
 								onChange?.(option.color, option.price);
 							}}
+							onKeyDown={(event) => {
+								if (event.key === "Enter" || event.key === " ") {
+									event.preventDefault();
+									setSelectedColor(option.color);
+									setIsOpen(false);
+									onChange?.(option.color, option.price);
+								}
+							}}
+							tabIndex={0}
+							aria-label={`${option.color === "black" ? "Черный" : "Белый"}${
+								option.price > 0
+									? `, доплата ${option.price.toLocaleString("ru-RU")} руб`
+									: option.price < 0
+									? `, скидка ${Math.abs(option.price).toLocaleString(
+											"ru-RU"
+									  )} руб`
+									: ""
+							}`}
 						>
 							<div className="flex flex-col">
 								<div className="flex gap-2 items-center">
@@ -109,6 +170,8 @@ export default function ColorSelect({
 								name="color-select"
 								checked={selectedColor === option.color}
 								onChange={() => setSelectedColor(option.color)}
+								focusable={false}
+								ariaHidden
 							/>
 						</li>
 					))}
