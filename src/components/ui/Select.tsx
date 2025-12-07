@@ -112,10 +112,12 @@ export default function Select({
 			>
 				<div className="flex gap-2 items-center">
 					{options.find((opt) => opt.value === selectedValue)?.renderIcon}
-					<span className="text-base font-medium">
-						{options.find((opt) => opt.value === selectedValue)?.label ||
-							selectedValue}
-					</span>
+					{options.find((opt) => opt.value === selectedValue)?.renderLabel ?? (
+						<span className="text-base font-medium">
+							{options.find((opt) => opt.value === selectedValue)?.label ||
+								selectedValue}
+						</span>
+					)}
 				</div>
 				<ChevronDownIcon
 					className={`w-4 h-4 text-graphite transition-transform ${

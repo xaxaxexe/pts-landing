@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 import type { Category, Spec, SpecOption, ColorOption } from "@/types/product";
 import {
 	useCreateProductMutation,
@@ -366,13 +367,9 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 								<h4 className="text-sm font-semibold text-white sm:text-base">
 									Оперативная память (опции)
 								</h4>
-								<button
-									type="button"
-									onClick={addMemoryOption}
-									className="rounded-lg bg-hero-gradient px-3 py-1 text-xs font-semibold sm:text-sm"
-								>
+								<Button type="button" onClick={addMemoryOption} size="sm">
 									+ Добавить опцию
-								</button>
+								</Button>
 							</div>
 							<div className="flex flex-col gap-2">
 								{memoryOptions.map((option, index) => (
@@ -414,13 +411,9 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 								<h4 className="text-sm font-semibold text-white sm:text-base">
 									SSD накопитель (опции)
 								</h4>
-								<button
-									type="button"
-									onClick={addSsdOption}
-									className="rounded-lg bg-hero-gradient px-3 py-1 text-xs font-semibold sm:text-sm"
-								>
+								<Button type="button" onClick={addSsdOption} size="sm">
 									+ Добавить опцию
-								</button>
+								</Button>
 							</div>
 							<div className="flex flex-col gap-2">
 								{ssdOptions.map((option, index) => (
@@ -504,13 +497,16 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 					</div>
 				)}
 
-				<button
+				<Button
 					type="submit"
-					disabled={isLoading}
-					className="mt-2 w-full cursor-pointer rounded-xl bg-hero-gradient p-3 text-base font-medium disabled:opacity-50 sm:rounded-2xl sm:p-5 sm:text-xl xl:p-7 xl:text-2xl"
+					fullWidth
+					size="lg"
+					isLoading={isLoading}
+					loadingText="Добавление..."
+					className="mt-2"
 				>
-					{isLoading ? "Добавление..." : "Добавить товар"}
-				</button>
+					Добавить товар
+				</Button>
 			</form>
 		</section>
 	);

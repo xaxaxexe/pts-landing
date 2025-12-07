@@ -67,7 +67,6 @@ function Portal({
 			element = createWrapperAndAppendToBody(wrapperId);
 		}
 
-		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setWrapperElement(element);
 
 		return () => {

@@ -10,6 +10,7 @@ import SsdIcon from "@/components/icons/SsdIcon";
 import SettingsIcon from "@/components/icons/SettingsIcon";
 import type { ReactNode } from "react";
 import Modal from "@/components/Modal";
+import Button from "@/components/ui/Button";
 import type { Product, SpecIcon, SpecForCard } from "@/types/product";
 
 type ProductCardProps = {
@@ -118,19 +119,20 @@ export default function ProductCard({
 					))}
 				</ul>
 				<div className="mt-2 flex w-full gap-2  items-center">
-					<button
+					<Button
 						onClick={handleBuyClick}
-						className="flex-1 cursor-pointer rounded-2xl bg-hero-gradient p-3 text-sm font-semibold sm:p-4 sm:text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-azure/30 active:scale-[0.98]"
+						className="flex-1 rounded-2xl p-3 text-sm sm:p-4 sm:text-base"
 					>
 						Купить
-					</button>
+					</Button>
 					{hasOptions && (
-						<button
+						<Button
+							variant="secondary"
 							onClick={() => setIsModalOpen(true)}
-							className="cursor-pointer rounded-2xl bg-slate-24 hover:bg-border px-6 h-full text-sm font-semibold sm:text-base  transition-all duration-300 hover:scale-[1.02]  active:scale-[0.98]"
+							className="rounded-2xl bg-slate-24 hover:bg-border px-6 h-full text-sm sm:text-base"
 						>
 							<SettingsIcon className="h-5 w-5 sm:h-6 sm:w-6" />
-						</button>
+						</Button>
 					)}
 				</div>
 			</div>

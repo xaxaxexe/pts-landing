@@ -1,14 +1,20 @@
 "use client";
 
 import { useState, useEffect, useRef, useId, useCallback } from "react";
+import type { ReactNode } from "react";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import Portal from "@/components/Portal";
+import Button from "@/components/ui/Button";
+import Select, { type SelectOption } from "@/components/ui/Select";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
 import SsdIcon from "@/components/icons/SsdIcon";
-import SpecSelect from "./SpecSelect";
-import ColorSelect from "./ColorSelect";
 import { handleEscape } from "@/lib/keyboard";
-import type { Product } from "@/types/product";
+import type {
+	Product,
+	SpecOption,
+	ColorOption,
+	ColorValue,
+} from "@/types/product";
 
 interface ModalProps {
 	isOpen: boolean;
@@ -26,6 +32,79 @@ const getFocusableElements = (container: HTMLElement | null) => {
 		(el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden")
 	);
 };
+
+// Internal components used only in Modal
+interface SpecSelectProps {
+	icon: ReactNode;
+	label: string;
+	value: string;
+	options?: SpecOption[];
+	onChange?: (value: string, price: number) => void;
+}
+
+function SpecSelect({
+	icon,
+	label,
+	value,
+	options = [],
+	onChange,
+}: SpecSelectProps) {
+	const selectOptions: SelectOption[] = options.map((option) => ({
+		value: option.value,
+		label: option.value,
+		price: option.price,
+		renderIcon: icon,
+	}));
+
+	return (
+		<Select
+			label={label}
+			options={selectOptions}
+			value={value}
+			onChange={(val, price) => onChange?.(val, price ?? 0)}
+		/>
+	);
+}
+
+interface ColorSelectProps {
+	label: string;
+	colorOptions: ColorOption[];
+	onChange?: (color: string, price: number) => void;
+}
+
+function ColorSelect({ label, colorOptions, onChange }: ColorSelectProps) {
+	const selectOptions: SelectOption[] = colorOptions.map((option) => {
+		const isBlack = option.color === "black";
+
+		return {
+			value: option.color,
+			label: isBlack ? "Черный" : "Белый",
+			price: option.price,
+			renderLabel: (
+				<div className="flex gap-2 items-center">
+					<div
+						className={`w-5 h-5 rounded-full ${
+							isBlack ? "bg-black" : "bg-white"
+						}`}
+					/>
+					<span className="text-base">{isBlack ? "Черный" : "Белый"}</span>
+				</div>
+			),
+		};
+	});
+
+	const selectedColor =
+		selectOptions.find((opt) => opt.value)?.value || "black";
+
+	return (
+		<Select
+			label={label}
+			options={selectOptions}
+			value={selectedColor}
+			onChange={(val, price) => onChange?.(val as ColorValue, price ?? 0)}
+		/>
+	);
+}
 
 export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 	const { setSelectedProduct, focusForm } = useSelectedProduct();
@@ -234,12 +313,9 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 								)}
 							</div>
 						</div>
-						<button
-							onClick={handleBuyClick}
-							className="w-full cursor-pointer rounded-xl bg-hero-gradient p-3 text-base font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-azure/30 active:scale-[0.98]"
-						>
+						<Button onClick={handleBuyClick} fullWidth size="md">
 							Купить
-						</button>
+						</Button>
 					</div>
 				</div>
 			</div>

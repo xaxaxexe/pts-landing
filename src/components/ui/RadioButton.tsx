@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 interface RadioButtonProps {
 	id: string;
 	name: string;
@@ -5,6 +7,9 @@ interface RadioButtonProps {
 	onChange: () => void;
 	focusable?: boolean;
 	ariaHidden?: boolean;
+	type?: "radio" | "checkbox";
+	children?: ReactNode;
+	className?: string;
 }
 
 export default function RadioButton({
@@ -14,15 +19,18 @@ export default function RadioButton({
 	onChange,
 	focusable = true,
 	ariaHidden = false,
+	type = "radio",
+	children,
+	className = "",
 }: RadioButtonProps) {
 	return (
 		<label
-			className="relative flex sm:inline-flex cursor-pointer items-center gap-2"
+			className={`group relative flex sm:inline-flex cursor-pointer items-center gap-2 ${className}`}
 			htmlFor={id}
 		>
 			<input
 				id={id}
-				type="radio"
+				type={type}
 				name={name}
 				checked={checked}
 				onChange={onChange}
@@ -30,13 +38,18 @@ export default function RadioButton({
 				aria-hidden={ariaHidden}
 				className="peer sr-only"
 			/>
-			<span className="flex w-7 h-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-slate-24 transition group-hover:bg-border">
+			<span className="flex w-4 h-4 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-ink transition group-hover:bg-border peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-azure">
 				<span
-					className={`w-3.5 h-3.5 sm:h-4 sm:w-4 rounded-full transition ${
+					className={`w-2 h-2 sm:h-4 sm:w-4 rounded-full transition ${
 						checked ? "bg-azure" : "bg-transparent"
 					}`}
 				/>
 			</span>
+			{children && (
+				<span className="text-[0.65rem] sm:text-base font-semibold">
+					{children}
+				</span>
+			)}
 		</label>
 	);
 }

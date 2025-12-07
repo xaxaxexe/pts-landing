@@ -5,6 +5,9 @@ import { useFormik } from "formik";
 import { z } from "zod";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import { useCreateOrderMutation } from "@/store/api/ordersApi";
+import FormInput from "@/components/ui/FormInput";
+import Button from "@/components/ui/Button";
+import RadioButton from "@/components/ui/RadioButton";
 import ChatBubbleIcon from "@/components/icons/ChatBubbleIcon";
 import CityIcon from "@/components/icons/CityIcon";
 import PhoneIcon from "@/components/icons/PhoneIcon";
@@ -156,248 +159,100 @@ export default function ContactForm() {
 				onSubmit={formik.handleSubmit}
 				className="flex w-full flex-col items-center gap-4 rounded-2xl sm:rounded-3xl bg-carbon p-4 sm:p-8"
 			>
-				<div
-					className={`flex w-full items-center gap-4 sm:gap-5 rounded-xl sm:rounded-2xl bg-ink p-4 sm:p-6 xl:p-8 transition-all duration-300 ${
-						formik.touched.name && formik.errors.name && formik.values.name
-							? "ring-2 ring-red-500/50"
-							: ""
-					} ${
-						formik.touched.name && !formik.errors.name && formik.values.name
-							? "ring-2 ring-green-500/50"
-							: ""
-					}`}
-				>
-					<UserIcon
-						className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
-							formik.touched.name && formik.errors.name && formik.values.name
-								? "text-red-500"
-								: formik.touched.name &&
-								  !formik.errors.name &&
-								  formik.values.name
-								? "text-green-500"
-								: "text-silver"
-						}`}
-					/>
-					<div className="w-full">
-						<label className="sr-only" htmlFor="name">
-							Имя
-						</label>
-						<input
-							id="name"
-							name="name"
-							type="text"
-							placeholder="Имя"
-							ref={nameInputRef}
-							value={formik.values.name}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							className="w-full bg-transparent sm:text-xl xl:text-2xl font-medium text-white outline-none placeholder-silver"
-						/>
-					</div>
-				</div>
+				<FormInput
+					icon={<UserIcon />}
+					id="name"
+					name="name"
+					placeholder="Имя"
+					value={formik.values.name}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					touched={formik.touched.name}
+					error={formik.errors.name}
+					inputRef={nameInputRef}
+				/>
 
-				<div
-					className={`flex w-full items-center gap-5 rounded-2xl bg-ink p-4 sm:p-6 xl:p-8 transition-all duration-300 ${
-						formik.touched.telegram &&
-						formik.errors.telegram &&
-						formik.values.telegram
-							? "ring-2 ring-red-500/50"
-							: ""
-					} ${
-						formik.touched.telegram &&
-						!formik.errors.telegram &&
-						formik.values.telegram
-							? "ring-2 ring-green-500/50"
-							: ""
-					}`}
-				>
-					<SendIcon
-						className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
-							formik.touched.telegram &&
-							formik.errors.telegram &&
-							formik.values.telegram
-								? "text-red-500"
-								: formik.touched.telegram &&
-								  !formik.errors.telegram &&
-								  formik.values.telegram
-								? "text-green-500"
-								: "text-silver"
-						}`}
-					/>
-					<div className="w-full">
-						<label className="sr-only" htmlFor="telegram">
-							Ваш Telegram для связи
-						</label>
-						<input
-							id="telegram"
-							name="telegram"
-							type="text"
-							placeholder="Ваш Telegram для связи (не обязательно)"
-							value={formik.values.telegram}
-							onChange={(e) => {
-								let value = e.target.value;
-								if (value && !value.startsWith("@")) {
-									value = "@" + value;
-								}
-								formik.setFieldValue("telegram", value);
-							}}
-							onBlur={formik.handleBlur}
-							className="w-full bg-transparent sm:text-xl xl:text-2xl font-medium text-white outline-none placeholder-silver"
-						/>
-					</div>
-				</div>
+				<FormInput
+					icon={<SendIcon />}
+					id="telegram"
+					name="telegram"
+					placeholder="Ваш Telegram для связи (не обязательно)"
+					value={formik.values.telegram}
+					onChange={(e) => {
+						let value = e.target.value;
+						if (value && !value.startsWith("@")) {
+							value = "@" + value;
+						}
+						formik.setFieldValue("telegram", value);
+					}}
+					onBlur={formik.handleBlur}
+					touched={formik.touched.telegram}
+					error={formik.errors.telegram}
+				/>
 
-				<div
-					className={`flex w-full items-center gap-5 rounded-2xl bg-ink p-4 sm:p-6 xl:p-8 transition-all duration-300 ${
-						formik.touched.phone && formik.errors.phone && formik.values.phone
-							? "ring-2 ring-red-500/50"
-							: ""
-					} ${
-						formik.touched.phone && !formik.errors.phone && formik.values.phone
-							? "ring-2 ring-green-500/50"
-							: ""
-					}`}
-				>
-					<PhoneIcon
-						className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
-							formik.touched.phone && formik.errors.phone && formik.values.phone
-								? "text-red-500"
-								: formik.touched.phone &&
-								  !formik.errors.phone &&
-								  formik.values.phone
-								? "text-green-500"
-								: "text-silver"
-						}`}
-					/>
-					<div className="w-full">
-						<label className="sr-only" htmlFor="phone">
-							Номер телефона
-						</label>
-						<input
-							id="phone"
-							name="phone"
-							type="tel"
-							placeholder="Номер телефона"
-							value={formik.values.phone}
-							onChange={(e) => {
-								const formatted = formatPhoneNumber(e.target.value);
-								formik.setFieldValue("phone", formatted);
-							}}
-							onBlur={formik.handleBlur}
-							className="w-full bg-transparent sm:text-xl xl:text-2xl font-medium text-white outline-none placeholder-silver"
-						/>
-					</div>
-				</div>
+				<FormInput
+					icon={<PhoneIcon />}
+					id="phone"
+					name="phone"
+					type="tel"
+					placeholder="Номер телефона"
+					value={formik.values.phone}
+					onChange={(e) => {
+						const formatted = formatPhoneNumber(e.target.value);
+						formik.setFieldValue("phone", formatted);
+					}}
+					onBlur={formik.handleBlur}
+					touched={formik.touched.phone}
+					error={formik.errors.phone}
+				/>
 
-				<div
-					className={`flex w-full items-center gap-5 rounded-2xl bg-ink p-4 sm:p-6 xl:p-8 transition-all duration-300 ${
-						formik.touched.email && formik.errors.email && formik.values.email
-							? "ring-2 ring-red-500/50"
-							: ""
-					} ${
-						formik.touched.email && !formik.errors.email && formik.values.email
-							? "ring-2 ring-green-500/50"
-							: ""
-					}`}
-				>
-					<ChatBubbleIcon
-						className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
-							formik.touched.email && formik.errors.email && formik.values.email
-								? "text-red-500"
-								: formik.touched.email &&
-								  !formik.errors.email &&
-								  formik.values.email
-								? "text-green-500"
-								: "text-silver"
-						}`}
-					/>
-					<div className="w-full">
-						<label className="sr-only" htmlFor="email">
-							Электронная почта
-						</label>
-						<input
-							id="email"
-							name="email"
-							type="email"
-							placeholder="Электронная почта (не обязательно)"
-							value={formik.values.email}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							className="w-full bg-transparent sm:text-xl xl:text-2xl font-medium text-white outline-none placeholder-silver"
-						/>
-					</div>
-				</div>
+				<FormInput
+					icon={<ChatBubbleIcon />}
+					id="email"
+					name="email"
+					type="email"
+					placeholder="Электронная почта (не обязательно)"
+					value={formik.values.email}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					touched={formik.touched.email}
+					error={formik.errors.email}
+				/>
 
-				<div
-					className={`flex w-full items-center gap-5 rounded-2xl bg-ink p-4 sm:p-6 xl:p-8 transition-all duration-300 ${
-						formik.touched.city && formik.errors.city && formik.values.city
-							? "ring-2 ring-red-500/50"
-							: ""
-					} ${
-						formik.touched.city && !formik.errors.city && formik.values.city
-							? "ring-2 ring-green-500/50"
-							: ""
-					}`}
-				>
-					<CityIcon
-						className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
-							formik.touched.city && formik.errors.city && formik.values.city
-								? "text-red-500"
-								: formik.touched.city &&
-								  !formik.errors.city &&
-								  formik.values.city
-								? "text-green-500"
-								: "text-silver"
-						}`}
-					/>
-					<div className="w-full">
-						<label className="sr-only" htmlFor="city">
-							Город
-						</label>
-						<input
-							id="city"
-							name="city"
-							type="text"
-							placeholder="Город"
-							value={formik.values.city}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							className="w-full bg-transparent sm:text-xl xl:text-2xl font-medium text-white outline-none placeholder-silver"
-						/>
-					</div>
-				</div>
+				<FormInput
+					icon={<CityIcon />}
+					id="city"
+					name="city"
+					placeholder="Город"
+					value={formik.values.city}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					touched={formik.touched.city}
+					error={formik.errors.city}
+				/>
 
 				<div className="mt-2 sm:mt-6 flex w-full flex-col items-center justify-center gap-3">
-					<label className="group relative flex sm:inline-flex cursor-pointer items-center gap-2">
-						<input
-							id="consent"
-							name="consent"
-							type="checkbox"
-							checked={formik.values.consent}
-							onChange={(e) =>
-								formik.setFieldValue("consent", e.target.checked)
-							}
-							onBlur={formik.handleBlur}
-							className="peer sr-only"
-						/>
-						<span className="flex w-4 h-4 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-ink transition group-hover:bg-border peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-azure">
-							<span
-								className={`w-2 h-2 sm:h-4 sm:w-4 rounded-full transition ${
-									formik.values.consent ? "bg-azure" : "bg-transparent"
-								}`}
-							/>
-						</span>
-						<span className="text-[0.65rem] sm:text-base font-semibold">
-							Я согласен на обработку персональных данных
-						</span>
-					</label>
-					<button
-						type="submit"
-						disabled={!formik.isValid || isLoading}
-						className="w-full cursor-pointer rounded-xl sm:rounded-2xl bg-hero-gradient p-3 sm:p-5 xl:p-7 text-base sm:text-xl xl:text-2xl font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-azure/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+					<RadioButton
+						id="consent"
+						name="consent"
+						type="checkbox"
+						checked={formik.values.consent}
+						onChange={() =>
+							formik.setFieldValue("consent", !formik.values.consent)
+						}
 					>
-						{isLoading ? "Отправка..." : "Отправить форму"}
-					</button>
+						Я согласен на обработку персональных данных
+					</RadioButton>
+					<Button
+						type="submit"
+						disabled={!formik.isValid}
+						fullWidth
+						size="lg"
+						isLoading={isLoading}
+						loadingText="Отправка..."
+					>
+						Отправить форму
+					</Button>
 
 					{message && (
 						<div

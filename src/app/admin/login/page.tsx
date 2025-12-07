@@ -1,6 +1,7 @@
 "use client";
 
 import BackgroundGlow from "@/components/BackgroundGlow";
+import Button from "@/components/ui/Button";
 import { FormEvent, useState } from "react";
 import { useLoginMutation } from "@/store/api/authApi";
 
@@ -72,13 +73,15 @@ export default function AdminLoginPage() {
 							{error}
 						</div>
 					)}
-					<button
+					<Button
 						type="submit"
-						disabled={isLoading}
-						className="rounded-xl bg-hero-gradient px-6 py-3 text-lg font-semibold transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-azure/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+						fullWidth
+						size="md"
+						isLoading={isLoading}
+						loadingText="Вход..."
 					>
-						{isLoading ? "Вход..." : "Войти"}
-					</button>
+						Войти
+					</Button>
 				</form>
 			</div>
 		</div>
