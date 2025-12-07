@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import BackgroundGlow from "@/components/BackgroundGlow";
+import { FormEvent, useState } from "react";
 
 export default function AdminLoginPage() {
 	const [login, setLogin] = useState("");
@@ -8,7 +9,7 @@ export default function AdminLoginPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		setError("");
 		setIsLoading(true);
@@ -40,12 +41,12 @@ export default function AdminLoginPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-background flex items-center justify-center px-5">
+		<div className="min-h-screen flex items-center justify-center px-5">
+			<BackgroundGlow />
 			<div className="w-full max-w-md">
 				<h1 className="mb-3 text-center  text-2xl lg:text-4xl font-bold text-white sm:text-5xl">
 					Вход
 				</h1>
-
 				<form
 					onSubmit={handleSubmit}
 					className="rounded-3xl bg-carbon p-6 sm:p-8 flex flex-col gap-5"

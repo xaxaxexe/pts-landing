@@ -1,0 +1,6 @@
+# Allow all
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://example.com/sitemap.xml

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ProductForm from "@/components/admin/ProductForm";
 import ProductList from "@/components/admin/ProductList";
 import OrderList from "@/components/admin/OrderList";
+import BackgroundGlow from "@/components/BackgroundGlow";
 
 type Tab = "orders" | "products";
 
@@ -28,7 +29,8 @@ export default function AdminPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-background">
+		<div className="min-h-screen">
+			<BackgroundGlow />
 			<div className="mx-auto w-full max-w-7xl px-5 py-10 lg:px-2">
 				<div className="mb-10 flex items-center justify-end">
 					<button
