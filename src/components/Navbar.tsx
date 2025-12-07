@@ -28,15 +28,48 @@ export default function Navbar() {
 				</div>
 				<div className="flex flex-col items-center gap-2">
 					<div className="flex items-center gap-3">
-						<VkIcon className="h-8 w-8" />
-						<TelegramIcon className="h-8 w-8" />
-						<YoutubeIcon className="h-8 w-8" />
-						<AvitoIcon className="h-8 w-8" />
+						<a
+							href="https://vk.com/powertechstore"
+							target="_blank"
+							rel="noreferrer"
+							className="inline-flex"
+						>
+							<VkIcon className="h-8 w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
+						</a>
+						<a
+							href="https://t.me/powertechstore"
+							target="_blank"
+							rel="noreferrer"
+							className="inline-flex"
+						>
+							<TelegramIcon className="h-8 w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
+						</a>
+						<a
+							href="https://www.youtube.com/@PowerTechStore1"
+							target="_blank"
+							rel="noreferrer"
+							className="inline-flex"
+						>
+							<YoutubeIcon className="h-8 w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
+						</a>
+						<a
+							href="https://www.avito.ru/brands/powertechstore"
+							target="_blank"
+							rel="noreferrer"
+							className="inline-flex"
+						>
+							<AvitoIcon className="h-8 w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
+						</a>
 					</div>
 
-					<span className="text-base text-center font-semibold leading-tight">
+					<a
+						href="https://wa.me/79173544334"
+						target="_blank"
+						rel="noreferrer"
+						className="text-base text-center font-semibold leading-tight text-white transition-colors duration-300 hover:text-azure hover:underline underline-offset-4 decoration-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azure"
+					>
 						+7 (917) 354 43-34
-					</span>
+					</a>
 				</div>
 			</div>
 		</nav>

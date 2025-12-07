@@ -20,6 +20,8 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 	const [selectedOptions, setSelectedOptions] = useState<
 		Record<string, { value: string; price: number }>
 	>({});
+	const [isClosing, setIsClosing] = useState(false);
+	const [isAnimating, setIsAnimating] = useState(false);
 
 	const memorySpec = productData.specs.find((spec) => spec.type === "memory");
 	const ssdSpec = productData.specs.find((spec) => spec.type === "ssd");
@@ -27,6 +29,7 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 
 	useEffect(() => {
 		if (isOpen) {
+			setIsAnimating(false);
 			const initial: Record<string, { value: string; price: number }> = {};
 			if (memorySpec?.options?.[0]) {
 				initial.memory = memorySpec.options[0];
@@ -41,14 +44,27 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 				};
 			}
 			setSelectedOptions(initial);
+
+			// Запускаем анимацию появления
+			requestAnimationFrame(() => {
+				setIsAnimating(true);
+			});
 		}
 	}, [isOpen, memorySpec, ssdSpec, colorSpec]);
 
 	const scrollToForm = () => {
 		const formElement = document.getElementById("contact-form");
 		if (formElement) {
-			formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+			formElement.scrollIntoView({ block: "start" });
 		}
+	};
+
+	const handleClose = () => {
+		setIsClosing(true);
+		setTimeout(() => {
+			setIsClosing(false);
+			onClose();
+		}, 300);
 	};
 
 	const handleBuyClick = () => {
@@ -67,21 +83,33 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 			totalPrice,
 		});
 
-		onClose();
-		scrollToForm();
+		handleClose();
+		setTimeout(() => {
+			scrollToForm();
+		}, 300);
 	};
 
-	if (!isOpen) return null;
+	if (!isOpen && !isClosing) return null;
 
 	return (
 		<Portal lockScroll>
 			<div className="fixed inset-0 z-50 flex items-center justify-center">
 				<div
-					className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-					onClick={onClose}
+					className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+						isClosing ? "opacity-0" : isAnimating ? "opacity-100" : "opacity-0"
+					}`}
+					onClick={handleClose}
 				/>
 
-				<div className="relative z-10 w-full max-w-md mx-4">
+				<div
+					className={`relative z-10 w-full max-w-md mx-4 transition-all duration-300 ${
+						isClosing
+							? "opacity-0 scale-95 translate-y-4"
+							: isAnimating
+							? "opacity-100 scale-100 translate-y-0"
+							: "opacity-0 scale-95 translate-y-4"
+					}`}
+				>
 					<div className="flex flex-col justify-between bg-carbon rounded-2xl lg:rounded-3xl p-6 lg:p-8 shadow-2xl min-h-128">
 						<div>
 							<h2 className="text-xl lg:text-2xl font-bold text-start text-white mb-5">
@@ -132,7 +160,7 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 						</div>
 						<button
 							onClick={handleBuyClick}
-							className="w-full cursor-pointer rounded-xl bg-hero-gradient p-3 text-base font-semibold"
+							className="w-full cursor-pointer rounded-xl bg-hero-gradient p-3 text-base font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-azure/30 active:scale-[0.98]"
 						>
 							Купить
 						</button>

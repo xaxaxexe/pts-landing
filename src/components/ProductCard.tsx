@@ -107,14 +107,14 @@ export default function ProductCard({
 				<div className="mt-2 flex w-full gap-2  items-center">
 					<button
 						onClick={handleBuyClick}
-						className="flex-1 cursor-pointer rounded-2xl bg-hero-gradient p-3 text-sm font-semibold sm:p-4 sm:text-base"
+						className="flex-1 cursor-pointer rounded-2xl bg-hero-gradient p-3 text-sm font-semibold sm:p-4 sm:text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-azure/30 active:scale-[0.98]"
 					>
 						Купить
 					</button>
 					{hasOptions && (
 						<button
 							onClick={() => setIsModalOpen(true)}
-							className="cursor-pointer rounded-2xl bg-slate-24 px-6 h-full text-sm font-semibold sm:text-base"
+							className="cursor-pointer rounded-2xl bg-slate-24 hover:bg-border px-6 h-full text-sm font-semibold sm:text-base  transition-all duration-300 hover:scale-[1.02]  active:scale-[0.98]"
 						>
 							<SettingsIcon className="h-5 w-5 sm:h-6 sm:w-6" />
 						</button>
