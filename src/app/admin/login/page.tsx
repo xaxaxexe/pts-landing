@@ -2,41 +2,25 @@
 
 import BackgroundGlow from "@/components/BackgroundGlow";
 import { FormEvent, useState } from "react";
+import { useLoginMutation } from "@/store/api/authApi";
 
 export default function AdminLoginPage() {
 	const [login, setLogin] = useState("");
 	const [password, setPassword] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	const [loginMutation, { isLoading }] = useLoginMutation();
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		setError("");
-		setIsLoading(true);
 
 		try {
-			const response = await fetch("/api/auth/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ login, password }),
-			});
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				setError(data.message || "Ошибка входа");
-				return;
-			}
-
+			await loginMutation({ login, password }).unwrap();
 			window.location.replace("/admin");
-		} catch (error) {
+		} catch (error: any) {
 			console.error("Login error:", error);
-			setError("Произошла ошибка при входе");
-		} finally {
-			setIsLoading(false);
+			setError(error?.data?.message || "Произошла ошибка при входе");
 		}
 	};
 

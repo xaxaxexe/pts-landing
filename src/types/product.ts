@@ -41,3 +41,27 @@ export interface ProductsResponse {
 	count: number;
 	products: Product[];
 }
+
+export interface CreateProductRequest {
+	category: string;
+	title: string;
+	price: number;
+	specs: Product["specs"];
+	image: string;
+}
+
+export interface DeleteProductResponse {
+	message: string;
+}
+
+export interface UploadImageResponse {
+	url: string;
+}
+
+export interface DeleteImageRequest {
+	url: string;
+}
+
+export interface DeleteImageResponse {
+	message: string;
+}

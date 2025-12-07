@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import type { Category, Spec, SpecOption, ColorOption } from "@/types/product";
+import {
+	useCreateProductMutation,
+	useUploadImageMutation,
+	useDeleteImageMutation,
+} from "@/store/api/productsApi";
 
 interface ProductFormProps {
 	onProductAdded: () => void;
@@ -28,11 +33,14 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 		{ color: "white", price: 0 },
 	]);
 
-	const [isLoading, setIsLoading] = useState(false);
 	const [message, setMessage] = useState<{
 		type: "success" | "error";
 		text: string;
 	} | null>(null);
+
+	const [createProduct, { isLoading }] = useCreateProductMutation();
+	const [uploadImage] = useUploadImageMutation();
+	const [deleteImage] = useDeleteImageMutation();
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -46,23 +54,14 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 			const formData = new FormData();
 			formData.append("file", file);
 
-			const response = await fetch("/api/upload", {
-				method: "POST",
-				body: formData,
-			});
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(data.error || "Ошибка при загрузке файла");
-			}
+			const data = await uploadImage(formData).unwrap();
 
 			setImage(data.url);
 			setMessage({ type: "success", text: "Изображение загружено!" });
-		} catch (error) {
+		} catch (error: any) {
 			setMessage({
 				type: "error",
-				text: error instanceof Error ? error.message : "Ошибка загрузки",
+				text: error?.data?.error || error?.message || "Ошибка загрузки",
 			});
 			setSelectedFile(null);
 		} finally {
@@ -74,26 +73,15 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 		if (!image) return;
 
 		try {
-			const response = await fetch(
-				`/api/upload?url=${encodeURIComponent(image)}`,
-				{
-					method: "DELETE",
-				}
-			);
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(data.error || "Ошибка при удалении файла");
-			}
+			await deleteImage({ url: image }).unwrap();
 
 			setImage("");
 			setSelectedFile(null);
 			setMessage({ type: "success", text: "Изображение удалено!" });
-		} catch (error) {
+		} catch (error: any) {
 			setMessage({
 				type: "error",
-				text: error instanceof Error ? error.message : "Ошибка удаления",
+				text: error?.data?.error || error?.message || "Ошибка удаления",
 			});
 		}
 	};
@@ -154,7 +142,6 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setIsLoading(true);
 		setMessage(null);
 
 		const filledMemoryOptions = memoryOptions.filter(
@@ -178,7 +165,6 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 				type: "error",
 				text: "Заполните все обязательные поля и добавьте изображение",
 			});
-			setIsLoading(false);
 			return;
 		}
 
@@ -191,25 +177,13 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 				{ type: "color", colorOptions: colorOptions },
 			];
 
-			const response = await fetch("/api/products", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					category,
-					title,
-					price: Number(price),
-					specs,
-					image,
-				}),
-			});
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(data.error || "Ошибка при добавлении товара");
-			}
+			await createProduct({
+				category,
+				title,
+				price: Number(price),
+				specs,
+				image,
+			}).unwrap();
 
 			setMessage({ type: "success", text: "Товар успешно добавлен!" });
 			setCategory("");
@@ -226,13 +200,11 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 				{ color: "white", price: 0 },
 			]);
 			onProductAdded();
-		} catch (error) {
+		} catch (error: any) {
 			setMessage({
 				type: "error",
-				text: error instanceof Error ? error.message : "Произошла ошибка",
+				text: error?.data?.error || error?.message || "Произошла ошибка",
 			});
-		} finally {
-			setIsLoading(false);
 		}
 	};
 

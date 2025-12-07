@@ -1,5 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { Category, ProductsResponse } from "@/types/product";
+import type {
+	Category,
+	ProductsResponse,
+	Product,
+	CreateProductRequest,
+	DeleteProductResponse,
+	UploadImageResponse,
+	DeleteImageRequest,
+	DeleteImageResponse,
+} from "@/types/product";
 
 export const productsApi = createApi({
 	reducerPath: "productsApi",
@@ -14,8 +23,45 @@ export const productsApi = createApi({
 			query: (category) => `/products?category=${encodeURIComponent(category)}`,
 			providesTags: ["Products"],
 		}),
+		createProduct: builder.mutation<Product, CreateProductRequest>({
+			query: (productData) => ({
+				url: "/products",
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: productData,
+			}),
+			invalidatesTags: ["Products"],
+		}),
+		deleteProduct: builder.mutation<DeleteProductResponse, string>({
+			query: (id) => ({
+				url: `/products?id=${id}`,
+				method: "DELETE",
+			}),
+			invalidatesTags: ["Products"],
+		}),
+		uploadImage: builder.mutation<UploadImageResponse, FormData>({
+			query: (formData) => ({
+				url: "/upload",
+				method: "POST",
+				body: formData,
+			}),
+		}),
+		deleteImage: builder.mutation<DeleteImageResponse, DeleteImageRequest>({
+			query: ({ url }) => ({
+				url: `/upload?url=${encodeURIComponent(url)}`,
+				method: "DELETE",
+			}),
+		}),
 	}),
 });
 
-export const { useGetProductsQuery, useGetProductsByCategoryQuery } =
-	productsApi;
+export const {
+	useGetProductsQuery,
+	useGetProductsByCategoryQuery,
+	useCreateProductMutation,
+	useDeleteProductMutation,
+	useUploadImageMutation,
+	useDeleteImageMutation,
+} = productsApi;

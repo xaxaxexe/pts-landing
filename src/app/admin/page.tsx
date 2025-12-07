@@ -6,6 +6,7 @@ import ProductForm from "@/components/admin/ProductForm";
 import ProductList from "@/components/admin/ProductList";
 import OrderList from "@/components/admin/OrderList";
 import BackgroundGlow from "@/components/BackgroundGlow";
+import { useLogoutMutation } from "@/store/api/authApi";
 
 type Tab = "orders" | "products";
 
@@ -14,13 +15,15 @@ export default function AdminPage() {
 	const [activeTab, setActiveTab] = useState<Tab>("orders");
 	const [refreshKey, setRefreshKey] = useState(0);
 
+	const [logout] = useLogoutMutation();
+
 	const handleProductAdded = () => {
 		setRefreshKey((prev) => prev + 1);
 	};
 
 	const handleLogout = async () => {
 		try {
-			await fetch("/api/auth/logout", { method: "POST" });
+			await logout().unwrap();
 			router.push("/admin/login");
 			router.refresh();
 		} catch (error) {

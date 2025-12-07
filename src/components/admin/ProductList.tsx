@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
 import GpuCardIcon from "@/components/icons/GpuCardIcon";
 import ProcessorIcon from "@/components/icons/ProcessorIcon";
 import SsdIcon from "@/components/icons/SsdIcon";
 import type { Product, SpecType } from "@/types/product";
+import {
+	useGetProductsQuery,
+	useDeleteProductMutation,
+} from "@/store/api/productsApi";
 
 const iconMap: Record<SpecType, React.ReactElement> = {
 	memory: <MemoryCardIcon className="h-5 w-5 sm:h-6 sm:w-6" />,
@@ -18,31 +22,8 @@ const iconMap: Record<SpecType, React.ReactElement> = {
 };
 
 export default function ProductList() {
-	const [products, setProducts] = useState<Product[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-
-	useEffect(() => {
-		fetchProducts();
-	}, []);
-
-	const fetchProducts = async () => {
-		try {
-			setIsLoading(true);
-			const response = await fetch("/api/products");
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(data.error || "Ошибка при загрузке товаров");
-			}
-
-			setProducts(data.products);
-		} catch (error) {
-			setError(error instanceof Error ? error.message : "Произошла ошибка");
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const { data, isLoading, error } = useGetProductsQuery();
+	const [deleteProduct] = useDeleteProductMutation();
 
 	const handleDelete = async (productId: string) => {
 		if (!confirm("Вы уверены, что хотите удалить этот товар?")) {
@@ -50,17 +31,7 @@ export default function ProductList() {
 		}
 
 		try {
-			const response = await fetch(`/api/products?id=${productId}`, {
-				method: "DELETE",
-			});
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(data.error || "Ошибка при удалении товара");
-			}
-
-			setProducts((prev) => prev.filter((p) => p._id !== productId));
+			await deleteProduct(productId).unwrap();
 		} catch (error) {
 			alert(
 				error instanceof Error ? error.message : "Ошибка при удалении товара"
@@ -80,13 +51,13 @@ export default function ProductList() {
 		return (
 			<div className="flex w-full justify-center py-10">
 				<div className="rounded-xl bg-red-500/20 p-4 text-center font-semibold text-red-400">
-					{error}
+					Ошибка при загрузке товаров
 				</div>
 			</div>
 		);
 	}
 
-	if (products.length === 0) {
+	if (!data || data.products.length === 0) {
 		return (
 			<div className="flex w-full justify-center py-10">
 				<div className="text-xl font-semibold text-silver">
@@ -95,6 +66,8 @@ export default function ProductList() {
 			</div>
 		);
 	}
+
+	const { products } = data;
 
 	const groupedProducts = products.reduce((acc, product) => {
 		if (!acc[product.category]) {
