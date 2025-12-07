@@ -22,7 +22,9 @@ export default function Home() {
 				<MapSection />
 			</main>
 
-			<Footer />
+			<footer className="bg-hero-gradient py-8 sm:py-16">
+				<Footer />
+			</footer>
 		</>
 	);
 }

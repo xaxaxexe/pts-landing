@@ -39,6 +39,7 @@ export default function Navbar() {
 							target="_blank"
 							rel="noreferrer"
 							className="inline-flex"
+							aria-label="VK"
 						>
 							<VkIcon className="w-7 h-7 sm:h-8 sm:w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
 						</a>
@@ -47,6 +48,7 @@ export default function Navbar() {
 							target="_blank"
 							rel="noreferrer"
 							className="inline-flex"
+							aria-label="Telegram"
 						>
 							<TelegramIcon className="w-7 h-7 sm:h-8 sm:w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
 						</a>
@@ -55,6 +57,7 @@ export default function Navbar() {
 							target="_blank"
 							rel="noreferrer"
 							className="inline-flex"
+							aria-label="YouTube"
 						>
 							<YoutubeIcon className="w-7 h-7 sm:h-8 sm:w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
 						</a>
@@ -63,6 +66,7 @@ export default function Navbar() {
 							target="_blank"
 							rel="noreferrer"
 							className="inline-flex"
+							aria-label="Avito"
 						>
 							<AvitoIcon className="w-7 h-7 sm:h-8 sm:w-8 text-white transition duration-200 hover:scale-110 hover:drop-shadow-[0_0_4px_rgba(0,255,255,0.4)] cursor-pointer" />
 						</a>
@@ -72,6 +76,7 @@ export default function Navbar() {
 						href="https://wa.me/79173544334"
 						target="_blank"
 						rel="noreferrer"
+						aria-label="Написать в WhatsApp"
 						className="text-xs sm:text-base text-center font-semibold leading-tight text-white transition-colors duration-300 hover:text-azure hover:underline underline-offset-4 decoration-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azure"
 					>
 						+7 (917) 354 43-34
