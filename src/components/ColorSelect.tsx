@@ -5,6 +5,7 @@ import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import RadioButton from "@/components/ui/RadioButton";
 import type { ColorOption } from "@/types/product";
 import { handleEscape } from "@/lib/keyboard";
+import type { ColorValue } from "@/types/product";
 
 interface ColorSelectProps {
 	label: string;
@@ -44,6 +45,24 @@ export default function ColorSelect({
 		handleEscape(event, () => setIsOpen(false), {
 			stopPropagation: true,
 		});
+
+		if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+			event.preventDefault();
+			const currentIndex = colorOptions.findIndex(
+				(opt) => opt.color === selectedColor
+			);
+			const delta = event.key === "ArrowDown" ? 1 : -1;
+			let nextIndex = currentIndex + delta;
+
+			if (nextIndex < 0) nextIndex = colorOptions.length - 1;
+			if (nextIndex >= colorOptions.length) nextIndex = 0;
+
+			const nextOption = colorOptions[nextIndex];
+			if (nextOption) {
+				setSelectedColor(nextOption.color);
+				onChange?.(nextOption.color, nextOption.price);
+			}
+		}
 	};
 
 	useEffect(() => {

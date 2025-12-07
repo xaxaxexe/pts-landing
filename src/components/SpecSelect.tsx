@@ -46,6 +46,24 @@ export default function SpecSelect({
 		handleEscape(event, () => setIsOpen(false), {
 			stopPropagation: true,
 		});
+
+		if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+			event.preventDefault();
+			const currentIndex = options.findIndex(
+				(opt) => opt.value === selectedValue
+			);
+			const delta = event.key === "ArrowDown" ? 1 : -1;
+			let nextIndex = currentIndex + delta;
+
+			if (nextIndex < 0) nextIndex = options.length - 1;
+			if (nextIndex >= options.length) nextIndex = 0;
+
+			const nextOption = options[nextIndex];
+			if (nextOption) {
+				setSelectedValue(nextOption.value);
+				onChange?.(nextOption.value, nextOption.price);
+			}
+		}
 	};
 
 	useEffect(() => {
