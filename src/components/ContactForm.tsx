@@ -2,6 +2,7 @@
 
 import { useFormik } from "formik";
 import { z } from "zod";
+import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import ChatBubbleIcon from "@/components/icons/ChatBubbleIcon";
 import CityIcon from "@/components/icons/CityIcon";
 import PhoneIcon from "@/components/icons/PhoneIcon";
@@ -59,6 +60,8 @@ const contactSchema = z.object({
 type ContactFormValues = z.infer<typeof contactSchema>;
 
 export default function ContactForm() {
+	const { selectedProduct, clearSelectedProduct } = useSelectedProduct();
+
 	const formik = useFormik<ContactFormValues>({
 		initialValues: {
 			name: "",
@@ -66,7 +69,7 @@ export default function ContactForm() {
 			phone: "",
 			email: "",
 			city: "",
-			consent: true,
+			consent: false,
 		},
 		validate: (values) => {
 			try {
@@ -84,13 +87,41 @@ export default function ContactForm() {
 			}
 		},
 		onSubmit: (values, { resetForm }) => {
-			console.log("Form submitted:", values);
+			const formData = {
+				name: values.name,
+				telegram: values.telegram,
+				phone: values.phone,
+				email: values.email,
+				city: values.city,
+				consent: values.consent,
+				data: selectedProduct
+					? {
+							_id: selectedProduct._id,
+							category: selectedProduct.category,
+							title: selectedProduct.title,
+							price: selectedProduct.price,
+							image: selectedProduct.image,
+							selectedOptions: selectedProduct.selectedOptions,
+							totalPrice: selectedProduct.totalPrice,
+					  }
+					: null,
+			};
+
+			console.log("Form submitted:", formData);
+
+			// TODO: Отправить formData на бэк
+			// await fetch('/api/orders', { method: 'POST', body: JSON.stringify(formData) })
+
 			resetForm();
+			clearSelectedProduct();
 		},
 	});
 
 	return (
-		<section className="w-full max-w-3xl flex flex-col gap-5 sm:gap-10 pt-10 mx-auto">
+		<section
+			id="contact-form"
+			className="w-full max-w-3xl flex flex-col gap-5 sm:gap-10 pt-10 mx-auto"
+		>
 			<h2 className="text-center text-2xl sm:text-3xl lg:text-5xl font-semibold text-white">
 				Присмотрел что-то? <br /> заполни форму!
 			</h2>

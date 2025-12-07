@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
 import GpuCardIcon from "@/components/icons/GpuCardIcon";
 import ProcessorIcon from "@/components/icons/ProcessorIcon";
@@ -33,6 +34,51 @@ export default function ProductCard({
 	productData,
 }: ProductCardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const { setSelectedProduct } = useSelectedProduct();
+
+	const scrollToForm = () => {
+		const formElement = document.getElementById("contact-form");
+		if (formElement) {
+			formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+		}
+	};
+
+	const hasOptions = productData.specs.some(
+		(spec) =>
+			(spec.options && spec.options.length > 0) ||
+			(spec.colorOptions && spec.colorOptions.length > 0)
+	);
+
+	const handleBuyClick = () => {
+		const defaultOptions: Record<string, { value: string; price: number }> = {};
+		let totalPrice = productData.price;
+
+		productData.specs.forEach((spec) => {
+			if (spec.options && spec.options.length > 0) {
+				defaultOptions[spec.type] = spec.options[0];
+				totalPrice += spec.options[0].price;
+			}
+			if (spec.colorOptions && spec.colorOptions.length > 0) {
+				defaultOptions[spec.type] = {
+					value: spec.colorOptions[0].color,
+					price: spec.colorOptions[0].price,
+				};
+				totalPrice += spec.colorOptions[0].price;
+			}
+		});
+
+		setSelectedProduct({
+			_id: productData._id,
+			category: productData.category,
+			title: productData.title,
+			price: productData.price,
+			specs: productData.specs,
+			image: productData.image,
+			selectedOptions: defaultOptions,
+			totalPrice,
+		});
+		scrollToForm();
+	};
 
 	return (
 		<>
@@ -59,15 +105,20 @@ export default function ProductCard({
 					))}
 				</ul>
 				<div className="mt-2 flex w-full gap-2  items-center">
-					<button className="flex-1 cursor-pointer rounded-2xl bg-hero-gradient p-3 text-sm font-semibold sm:p-4 sm:text-base">
+					<button
+						onClick={handleBuyClick}
+						className="flex-1 cursor-pointer rounded-2xl bg-hero-gradient p-3 text-sm font-semibold sm:p-4 sm:text-base"
+					>
 						Купить
 					</button>
-					<button
-						onClick={() => setIsModalOpen(true)}
-						className="cursor-pointer rounded-2xl bg-slate-24 px-6 h-full text-sm font-semibold sm:text-base"
-					>
-						<SettingsIcon className="h-5 w-5 sm:h-6 sm:w-6" />
-					</button>
+					{hasOptions && (
+						<button
+							onClick={() => setIsModalOpen(true)}
+							className="cursor-pointer rounded-2xl bg-slate-24 px-6 h-full text-sm font-semibold sm:text-base"
+						>
+							<SettingsIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+						</button>
+					)}
 				</div>
 			</div>
 

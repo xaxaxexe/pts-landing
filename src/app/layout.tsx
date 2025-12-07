@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/store/StoreProvider";
+import { SelectedProductProvider } from "@/contexts/SelectedProductContext";
 
 const inter = Inter({
 	variable: "--font-inter",
@@ -29,7 +30,9 @@ export default function RootLayout({
 			<body
 				className={`${inter.variable} ${geistMono.variable} antialiased overflow-x-clip relative bg-[#060606] text-slate-100`}
 			>
-				<StoreProvider>{children}</StoreProvider>
+				<StoreProvider>
+					<SelectedProductProvider>{children}</SelectedProductProvider>
+				</StoreProvider>
 			</body>
 		</html>
 	);

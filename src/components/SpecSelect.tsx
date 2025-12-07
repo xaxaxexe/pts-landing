@@ -10,6 +10,7 @@ interface SpecSelectProps {
 	label: string;
 	value: string;
 	options?: SpecOption[];
+	onChange?: (value: string, price: number) => void;
 }
 
 export default function SpecSelect({
@@ -17,6 +18,7 @@ export default function SpecSelect({
 	label,
 	value,
 	options = [],
+	onChange,
 }: SpecSelectProps) {
 	const [selectedValue, setSelectedValue] = useState(value);
 	const [isOpen, setIsOpen] = useState(false);
@@ -78,6 +80,7 @@ export default function SpecSelect({
 							onClick={() => {
 								setSelectedValue(option.value);
 								setIsOpen(false);
+								onChange?.(option.value, option.price);
 							}}
 						>
 							<div className="flex flex-col">

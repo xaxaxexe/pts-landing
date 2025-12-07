@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import Portal from "@/components/Portal";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
 import SsdIcon from "@/components/icons/SsdIcon";
@@ -14,11 +16,62 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, productData }: ModalProps) {
-	if (!isOpen) return null;
+	const { setSelectedProduct } = useSelectedProduct();
+	const [selectedOptions, setSelectedOptions] = useState<
+		Record<string, { value: string; price: number }>
+	>({});
 
 	const memorySpec = productData.specs.find((spec) => spec.type === "memory");
 	const ssdSpec = productData.specs.find((spec) => spec.type === "ssd");
 	const colorSpec = productData.specs.find((spec) => spec.type === "color");
+
+	useEffect(() => {
+		if (isOpen) {
+			const initial: Record<string, { value: string; price: number }> = {};
+			if (memorySpec?.options?.[0]) {
+				initial.memory = memorySpec.options[0];
+			}
+			if (ssdSpec?.options?.[0]) {
+				initial.ssd = ssdSpec.options[0];
+			}
+			if (colorSpec?.colorOptions?.[0]) {
+				initial.color = {
+					value: colorSpec.colorOptions[0].color,
+					price: colorSpec.colorOptions[0].price,
+				};
+			}
+			setSelectedOptions(initial);
+		}
+	}, [isOpen, memorySpec, ssdSpec, colorSpec]);
+
+	const scrollToForm = () => {
+		const formElement = document.getElementById("contact-form");
+		if (formElement) {
+			formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+		}
+	};
+
+	const handleBuyClick = () => {
+		const totalPrice =
+			productData.price +
+			Object.values(selectedOptions).reduce((sum, opt) => sum + opt.price, 0);
+
+		setSelectedProduct({
+			_id: productData._id,
+			category: productData.category,
+			title: productData.title,
+			price: productData.price,
+			specs: productData.specs,
+			image: productData.image,
+			selectedOptions,
+			totalPrice,
+		});
+
+		onClose();
+		scrollToForm();
+	};
+
+	if (!isOpen) return null;
 
 	return (
 		<Portal lockScroll>
@@ -41,6 +94,12 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 										label="Оперативная память"
 										value={memorySpec.options[0]?.value}
 										options={memorySpec.options}
+										onChange={(value, price) =>
+											setSelectedOptions((prev) => ({
+												...prev,
+												memory: { value, price },
+											}))
+										}
 									/>
 								)}
 								{ssdSpec && ssdSpec.options && (
@@ -49,17 +108,32 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 										label="SSD"
 										value={ssdSpec.options[0]?.value}
 										options={ssdSpec.options}
+										onChange={(value, price) =>
+											setSelectedOptions((prev) => ({
+												...prev,
+												ssd: { value, price },
+											}))
+										}
 									/>
 								)}
 								{colorSpec && colorSpec.colorOptions && (
 									<ColorSelect
 										label="Цвет"
 										colorOptions={colorSpec.colorOptions}
+										onChange={(value, price) =>
+											setSelectedOptions((prev) => ({
+												...prev,
+												color: { value, price },
+											}))
+										}
 									/>
 								)}
 							</div>
 						</div>
-						<button className="w-full cursor-pointer rounded-xl bg-hero-gradient p-3 text-base font-semibold">
+						<button
+							onClick={handleBuyClick}
+							className="w-full cursor-pointer rounded-xl bg-hero-gradient p-3 text-base font-semibold"
+						>
 							Купить
 						</button>
 					</div>

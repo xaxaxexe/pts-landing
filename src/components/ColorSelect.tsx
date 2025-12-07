@@ -8,9 +8,14 @@ import type { ColorOption } from "@/types/product";
 interface ColorSelectProps {
 	label: string;
 	colorOptions: ColorOption[];
+	onChange?: (color: string, price: number) => void;
 }
 
-export default function ColorSelect({ label, colorOptions }: ColorSelectProps) {
+export default function ColorSelect({
+	label,
+	colorOptions,
+	onChange,
+}: ColorSelectProps) {
 	const [selectedColor, setSelectedColor] = useState(
 		colorOptions[0]?.color || "black"
 	);
@@ -35,10 +40,6 @@ export default function ColorSelect({ label, colorOptions }: ColorSelectProps) {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [isOpen]);
-
-	const selectedOption = colorOptions.find(
-		(opt) => opt.color === selectedColor
-	);
 
 	return (
 		<div className="relative" ref={dropdownRef}>
@@ -83,6 +84,7 @@ export default function ColorSelect({ label, colorOptions }: ColorSelectProps) {
 							onClick={() => {
 								setSelectedColor(option.color);
 								setIsOpen(false);
+								onChange?.(option.color, option.price);
 							}}
 						>
 							<div className="flex flex-col">
