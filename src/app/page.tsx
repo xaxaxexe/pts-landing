@@ -6,7 +6,6 @@ import AboutSection from "@/components/AboutSection";
 import ContactForm from "@/components/ContactForm";
 import MapSection from "@/components/MapSection";
 import Footer from "@/components/Footer";
-import Modal from "@/components/Modal";
 
 export default function Home() {
 	return (

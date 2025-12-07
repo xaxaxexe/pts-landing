@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
@@ -83,11 +84,16 @@ export default function ProductCard({
 	return (
 		<>
 			<div className="flex flex-col gap-3 rounded-2xl bg-carbon p-3 sm:rounded-3xl sm:p-4 md:p-5">
-				<img
-					src={image}
-					alt={title}
-					className="aspect-4/3 object-cover rounded-xl  sm:rounded-2xl"
-				/>
+				<div className="relative aspect-4/3 overflow-hidden rounded-xl sm:rounded-2xl">
+					<Image
+						src={image}
+						alt={title}
+						fill
+						className="object-cover"
+						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+						priority={false}
+					/>
+				</div>
 
 				<div className="flex sm:items-center justify-between text-base sm:text-lg lg:text-xl">
 					<span className="font-bold leading-tight">{title}</span>

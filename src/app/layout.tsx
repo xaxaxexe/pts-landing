@@ -15,9 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Landing Starter | Next.js + Tailwind",
-	description:
-		"A clean starter layout for a Next.js + TypeScript + Tailwind landing page.",
+	title: "pts - title",
+	description: "pts - description",
+	icons: {
+		icon: "/favicon.ico",
+	},
 };
 
 export default function RootLayout({
