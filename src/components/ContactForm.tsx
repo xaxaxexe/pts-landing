@@ -3,6 +3,7 @@
 import { useFormik } from "formik";
 import { z } from "zod";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
+import { useCreateOrderMutation } from "@/store/api/ordersApi";
 import ChatBubbleIcon from "@/components/icons/ChatBubbleIcon";
 import CityIcon from "@/components/icons/CityIcon";
 import PhoneIcon from "@/components/icons/PhoneIcon";
@@ -61,6 +62,7 @@ type ContactFormValues = z.infer<typeof contactSchema>;
 
 export default function ContactForm() {
 	const { selectedProduct, clearSelectedProduct } = useSelectedProduct();
+	const [createOrder, { isLoading }] = useCreateOrderMutation();
 
 	const formik = useFormik<ContactFormValues>({
 		initialValues: {
@@ -86,34 +88,41 @@ export default function ContactForm() {
 				return {};
 			}
 		},
-		onSubmit: (values, { resetForm }) => {
-			const formData = {
-				name: values.name,
-				telegram: values.telegram,
-				phone: values.phone,
-				email: values.email,
-				city: values.city,
-				consent: values.consent,
-				data: selectedProduct
-					? {
-							_id: selectedProduct._id,
-							category: selectedProduct.category,
-							title: selectedProduct.title,
-							price: selectedProduct.price,
-							image: selectedProduct.image,
-							selectedOptions: selectedProduct.selectedOptions,
-							totalPrice: selectedProduct.totalPrice,
-					  }
-					: null,
-			};
+		onSubmit: async (values, { resetForm }) => {
+			try {
+				const orderData = {
+					name: values.name,
+					telegram: values.telegram,
+					phone: values.phone,
+					email: values.email,
+					city: values.city,
+					consent: values.consent,
+					data: selectedProduct
+						? {
+								_id: selectedProduct._id,
+								category: selectedProduct.category,
+								title: selectedProduct.title,
+								price: selectedProduct.price,
+								image: selectedProduct.image,
+								selectedOptions: selectedProduct.selectedOptions,
+								totalPrice: selectedProduct.totalPrice,
+						  }
+						: null,
+				};
 
-			console.log("Form submitted:", formData);
+				const result = await createOrder(orderData).unwrap();
 
-			// TODO: Отправить formData на бэк
-			// await fetch('/api/orders', { method: 'POST', body: JSON.stringify(formData) })
-
-			resetForm();
-			clearSelectedProduct();
+				alert(result.message || "Заявка успешно отправлена!");
+				resetForm();
+				clearSelectedProduct();
+			} catch (error: any) {
+				console.error("Error submitting form:", error);
+				alert(
+					`Ошибка: ${
+						error.data?.message || "Произошла ошибка при отправке формы"
+					}`
+				);
+			}
 		},
 	});
 
@@ -365,10 +374,10 @@ export default function ContactForm() {
 					</label>
 					<button
 						type="submit"
-						disabled={!formik.isValid || formik.isSubmitting}
+						disabled={!formik.isValid || isLoading}
 						className="w-full cursor-pointer rounded-xl sm:rounded-2xl bg-hero-gradient p-3 sm:p-5 xl:p-7 text-base sm:text-xl xl:text-2xl font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-azure/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
 					>
-						Отправить форму
+						{isLoading ? "Отправка..." : "Отправить форму"}
 					</button>
 				</div>
 			</form>
