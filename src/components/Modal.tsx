@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useId } from "react";
+import { useState, useEffect, useRef, useId, useCallback } from "react";
 import { useSelectedProduct } from "@/contexts/SelectedProductContext";
 import Portal from "@/components/Portal";
 import MemoryCardIcon from "@/components/icons/MemoryCardIcon";
@@ -42,8 +42,18 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 	const ssdSpec = productData.specs.find((spec) => spec.type === "ssd");
 	const colorSpec = productData.specs.find((spec) => spec.type === "color");
 
+	const handleClose = useCallback(() => {
+		if (isClosing) return;
+		setIsClosing(true);
+		setTimeout(() => {
+			setIsClosing(false);
+			onClose();
+		}, 300);
+	}, [isClosing, onClose]);
+
 	useEffect(() => {
 		if (isOpen) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
 			setIsAnimating(false);
 			const initial: Record<string, { value: string; price: number }> = {};
 			if (memorySpec?.options?.[0]) {
@@ -110,7 +120,7 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 			document.removeEventListener("keydown", handleKeyDown);
 			previouslyFocusedElement.current?.focus();
 		};
-	}, [isOpen]);
+	}, [handleClose, isOpen]);
 
 	const scrollToForm = () => {
 		const formElement = document.getElementById("contact-form");
@@ -124,15 +134,6 @@ export default function Modal({ isOpen, onClose, productData }: ModalProps) {
 		} else {
 			focusForm();
 		}
-	};
-
-	const handleClose = () => {
-		if (isClosing) return;
-		setIsClosing(true);
-		setTimeout(() => {
-			setIsClosing(false);
-			onClose();
-		}, 300);
 	};
 
 	const handleBuyClick = () => {

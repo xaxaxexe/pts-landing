@@ -27,8 +27,7 @@ function Portal({
 		null
 	);
 	const localContainerRef = useRef<HTMLDivElement>(null);
-
-	const [_, setOriginalStyles] = useState({
+	const originalStylesRef = useRef({
 		overflow: "",
 		paddingRight: "",
 	});
@@ -40,17 +39,17 @@ function Portal({
 			const originalOverflow = document.body.style.overflow;
 			const originalPaddingRight = document.body.style.paddingRight;
 
-			setOriginalStyles({
+			originalStylesRef.current = {
 				overflow: originalOverflow,
 				paddingRight: originalPaddingRight,
-			});
-
+			};
 			document.body.style.paddingRight = `${scrollbarWidth}px`;
 			document.body.style.overflow = "hidden";
 
 			return () => {
-				document.body.style.overflow = originalOverflow;
-				document.body.style.paddingRight = originalPaddingRight;
+				document.body.style.overflow = originalStylesRef.current.overflow;
+				document.body.style.paddingRight =
+					originalStylesRef.current.paddingRight;
 			};
 		}
 	}, [lockScroll]);
@@ -68,6 +67,7 @@ function Portal({
 			element = createWrapperAndAppendToBody(wrapperId);
 		}
 
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setWrapperElement(element);
 
 		return () => {

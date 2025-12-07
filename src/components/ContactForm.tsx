@@ -133,10 +133,11 @@ export default function ContactForm() {
 				});
 				resetForm();
 				clearSelectedProduct();
-			} catch (error: any) {
+			} catch (error: unknown) {
 				console.error("Error submitting form:", error);
+				const err = error as { data?: { message?: string } };
 				setMessage({
-					text: error.data?.message || "Произошла ошибка при отправке формы",
+					text: err.data?.message || "Произошла ошибка при отправке формы",
 					type: "error",
 				});
 			}

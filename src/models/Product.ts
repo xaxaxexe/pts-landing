@@ -6,9 +6,8 @@ import type {
 	ColorOption,
 } from "@/types/product";
 
-export interface ISpecOption extends SpecOption {}
-
-export interface IColorOption extends ColorOption {}
+export type ISpecOption = SpecOption;
+export type IColorOption = ColorOption;
 
 export interface ISpec {
 	type: SpecType;
