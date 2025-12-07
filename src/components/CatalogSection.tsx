@@ -1,8 +1,6 @@
-"use client";
-
 import ProductCard from "@/components/ProductCard";
 import ProductSection from "@/components/ProductSection";
-import { useGetProductsQuery } from "@/store/api/productsApi";
+import { getProducts } from "@/lib/products";
 import type { Spec } from "@/types/product";
 
 const formatSpecsForCard = (specs: Spec[]) => {
@@ -17,17 +15,16 @@ const formatSpecsForCard = (specs: Spec[]) => {
 		}));
 };
 
-export default function CatalogSection() {
-	const { data, isLoading, isError } = useGetProductsQuery();
+export default async function CatalogSection() {
+	const products = await getProducts();
 
-	const groupedProducts =
-		data?.products.reduce((acc, product) => {
-			if (!acc[product.category]) {
-				acc[product.category] = [];
-			}
-			acc[product.category].push(product);
-			return acc;
-		}, {} as Record<string, typeof data.products>) || {};
+	const groupedProducts = products.reduce((acc, product) => {
+		if (!acc[product.category]) {
+			acc[product.category] = [];
+		}
+		acc[product.category].push(product);
+		return acc;
+	}, {} as Record<string, typeof products>);
 
 	const categories = Object.keys(groupedProducts);
 
@@ -36,11 +33,7 @@ export default function CatalogSection() {
 			id="catalog"
 			className="w-full max-w-3xl flex flex-col justify-center items-center gap-15 pt-10 mx-auto px-2 sm:px-0 text-white"
 		>
-			{isLoading && isError && <div className=""></div>}
-
-			{!isLoading &&
-				!isError &&
-				data?.products &&
+			{products.length > 0 &&
 				categories.map((category) => {
 					const categoryProducts = groupedProducts[category];
 

@@ -37,7 +37,7 @@ export default function FormInput({
 			} ${isValid ? "ring-2 ring-green-500/50" : ""}`}
 		>
 			<div
-				className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors ${
+				className={`flex justify-center items-center h-6 w-6 sm:h-8 sm:w-8 transition-colors ${
 					hasError ? "text-red-500" : isValid ? "text-green-500" : "text-silver"
 				}`}
 			>

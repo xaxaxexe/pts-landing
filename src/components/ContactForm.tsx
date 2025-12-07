@@ -160,7 +160,7 @@ export default function ContactForm() {
 				className="flex w-full flex-col items-center gap-4 rounded-2xl sm:rounded-3xl bg-carbon p-4 sm:p-8"
 			>
 				<FormInput
-					icon={<UserIcon />}
+					icon={<UserIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
 					id="name"
 					name="name"
 					placeholder="Имя"
@@ -173,7 +173,7 @@ export default function ContactForm() {
 				/>
 
 				<FormInput
-					icon={<SendIcon />}
+					icon={<SendIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
 					id="telegram"
 					name="telegram"
 					placeholder="Ваш Telegram для связи (не обязательно)"
@@ -191,7 +191,7 @@ export default function ContactForm() {
 				/>
 
 				<FormInput
-					icon={<PhoneIcon />}
+					icon={<PhoneIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
 					id="phone"
 					name="phone"
 					type="tel"
@@ -207,7 +207,7 @@ export default function ContactForm() {
 				/>
 
 				<FormInput
-					icon={<ChatBubbleIcon />}
+					icon={<ChatBubbleIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
 					id="email"
 					name="email"
 					type="email"
@@ -220,7 +220,7 @@ export default function ContactForm() {
 				/>
 
 				<FormInput
-					icon={<CityIcon />}
+					icon={<CityIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
 					id="city"
 					name="city"
 					placeholder="Город"
