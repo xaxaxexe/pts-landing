@@ -16,14 +16,12 @@ export async function getProducts(): Promise<ProductType[]> {
 			const bothKnown = indexA !== -1 && indexB !== -1;
 			if (bothKnown) {
 				if (indexA === indexB) {
-					return (
-						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-					);
+					return a.price - b.price;
 				}
 				return indexA - indexB;
 			}
 
-			return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+			return a.price - b.price;
 		});
 
 		return sortedProducts.map((product) => ({
