@@ -1,19 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
-import type { Category, Spec, SpecOption, ColorOption } from "@/types/product";
+import type {
+	Product,
+	Category,
+	Spec,
+	SpecOption,
+	ColorOption,
+} from "@/types/product";
 import {
 	useCreateProductMutation,
+	useUpdateProductMutation,
 	useUploadImageMutation,
 	useDeleteImageMutation,
 } from "@/store/api/productsApi";
 
 interface ProductFormProps {
 	onProductAdded: () => void;
+	editProduct?: Product | null;
+	onCancel?: () => void;
 }
 
-export default function ProductForm({ onProductAdded }: ProductFormProps) {
+const defaultMemoryOptions: SpecOption[] = [{ value: "", price: 0 }];
+const defaultSsdOptions: SpecOption[] = [{ value: "", price: 0 }];
+const defaultColorOptions: ColorOption[] = [
+	{ color: "black", price: 0 },
+	{ color: "white", price: 0 },
+];
+
+export default function ProductForm({
+	onProductAdded,
+	editProduct,
+	onCancel,
+}: ProductFormProps) {
 	const [category, setCategory] = useState<Category>("");
 	const [title, setTitle] = useState("");
 	const [price, setPrice] = useState("");
@@ -39,9 +59,46 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 		text: string;
 	} | null>(null);
 
-	const [createProduct, { isLoading }] = useCreateProductMutation();
+	const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
+	const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 	const [uploadImage] = useUploadImageMutation();
 	const [deleteImage] = useDeleteImageMutation();
+
+	const isLoading = isCreating || isUpdating;
+	const isEditing = !!editProduct;
+
+	useEffect(() => {
+		if (editProduct) {
+			setCategory(editProduct.category);
+			setTitle(editProduct.title);
+			setPrice(String(editProduct.price));
+			setImage(editProduct.image);
+			setSelectedFile(null);
+
+			const cpuSpec = editProduct.specs.find((s) => s.type === "cpu");
+			const gpuSpec = editProduct.specs.find((s) => s.type === "gpu");
+			const memorySpec = editProduct.specs.find((s) => s.type === "memory");
+			const ssdSpec = editProduct.specs.find((s) => s.type === "ssd");
+			const colorSpec = editProduct.specs.find((s) => s.type === "color");
+
+			setCpu(cpuSpec?.value || "");
+			setGpu(gpuSpec?.value || "");
+			setMemoryOptions(
+				memorySpec?.options?.length ? memorySpec.options : defaultMemoryOptions,
+			);
+			setSsdOptions(
+				ssdSpec?.options?.length ? ssdSpec.options : defaultSsdOptions,
+			);
+			setColorOptions(
+				colorSpec?.colorOptions?.length
+					? colorSpec.colorOptions
+					: defaultColorOptions,
+			);
+			setMessage(null);
+		} else {
+			resetForm();
+		}
+	}, [editProduct]);
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -100,7 +157,7 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 	const updateMemoryOption = (
 		index: number,
 		field: "value" | "price",
-		value: string | number
+		value: string | number,
 	) => {
 		const updated = [...memoryOptions];
 		if (field === "value") {
@@ -124,7 +181,7 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 	const updateSsdOption = (
 		index: number,
 		field: "value" | "price",
-		value: string | number
+		value: string | number,
 	) => {
 		const updated = [...ssdOptions];
 		if (field === "value") {
@@ -141,15 +198,32 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 		setColorOptions(updated);
 	};
 
+	const resetForm = () => {
+		setCategory("");
+		setTitle("");
+		setPrice("");
+		setImage("");
+		setSelectedFile(null);
+		setCpu("");
+		setGpu("");
+		setMemoryOptions([{ value: "", price: 0 }]);
+		setSsdOptions([{ value: "", price: 0 }]);
+		setColorOptions([
+			{ color: "black", price: 0 },
+			{ color: "white", price: 0 },
+		]);
+		setMessage(null);
+	};
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setMessage(null);
 
 		const filledMemoryOptions = memoryOptions.filter(
-			(opt) => opt.value.trim() !== ""
+			(opt) => opt.value.trim() !== "",
 		);
 		const filledSsdOptions = ssdOptions.filter(
-			(opt) => opt.value.trim() !== ""
+			(opt) => opt.value.trim() !== "",
 		);
 
 		if (
@@ -178,28 +252,26 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 				{ type: "color", colorOptions: colorOptions },
 			];
 
-			await createProduct({
+			const productData = {
 				category,
 				title,
 				price: Number(price),
 				specs,
 				image,
-			}).unwrap();
+			};
 
-			setMessage({ type: "success", text: "Товар успешно добавлен!" });
-			setCategory("");
-			setTitle("");
-			setPrice("");
-			setImage("");
-			setSelectedFile(null);
-			setCpu("");
-			setGpu("");
-			setMemoryOptions([{ value: "", price: 0 }]);
-			setSsdOptions([{ value: "", price: 0 }]);
-			setColorOptions([
-				{ color: "black", price: 0 },
-				{ color: "white", price: 0 },
-			]);
+			if (isEditing) {
+				await updateProduct({
+					id: editProduct!._id,
+					data: productData,
+				}).unwrap();
+				setMessage({ type: "success", text: "Товар успешно обновлен!" });
+			} else {
+				await createProduct(productData).unwrap();
+				setMessage({ type: "success", text: "Товар успешно добавлен!" });
+			}
+
+			resetForm();
 			onProductAdded();
 		} catch (error: any) {
 			setMessage({
@@ -212,7 +284,7 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 	return (
 		<section className="w-full">
 			<h2 className="mb-5 text-center text-2xl font-semibold text-white sm:text-3xl lg:text-4xl">
-				Добавить товар
+				{isEditing ? "Редактировать товар" : "Добавить товар"}
 			</h2>
 
 			<form
@@ -497,16 +569,28 @@ export default function ProductForm({ onProductAdded }: ProductFormProps) {
 					</div>
 				)}
 
-				<Button
-					type="submit"
-					fullWidth
-					size="lg"
-					isLoading={isLoading}
-					loadingText="Добавление..."
-					className="mt-2"
-				>
-					Добавить товар
-				</Button>
+				<div className="mt-2 flex w-full gap-3">
+					<Button
+						type="submit"
+						fullWidth
+						size="lg"
+						isLoading={isLoading}
+						loadingText={isEditing ? "Сохранение..." : "Добавление..."}
+					>
+						{isEditing ? "Сохранить изменения" : "Добавить товар"}
+					</Button>
+					{isEditing && onCancel && (
+						<Button
+							type="button"
+							fullWidth
+							size="lg"
+							onClick={onCancel}
+							className="bg-ink hover:bg-slate-24"
+						>
+							Отмена
+						</Button>
+					)}
+				</div>
 			</form>
 		</section>
 	);

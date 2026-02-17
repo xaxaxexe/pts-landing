@@ -8,12 +8,11 @@ const createOrderSchema = z.object({
 	name: z.string().min(2, "Имя должно содержать минимум 2 символа"),
 	telegram: z
 		.string()
+		.min(1, "Telegram обязателен")
 		.refine(
-			(val) => !val || /^@?[a-zA-Z][a-zA-Z0-9_]{3,31}$/.test(val),
-			"Неверный формат Telegram"
-		)
-		.optional()
-		.default(""),
+			(val) => /^@?[a-zA-Z][a-zA-Z0-9_]{3,31}$/.test(val),
+			"Неверный формат Telegram",
+		),
 	phone: z
 		.string()
 		.min(1, "Телефон обязателен")
@@ -22,7 +21,7 @@ const createOrderSchema = z.object({
 		.string()
 		.refine(
 			(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-			"Неверный формат email"
+			"Неверный формат email",
 		)
 		.optional()
 		.default(""),
@@ -42,7 +41,7 @@ const createOrderSchema = z.object({
 				z.object({
 					value: z.string(),
 					price: z.number(),
-				})
+				}),
 			),
 			totalPrice: z.number(),
 		})
@@ -70,7 +69,7 @@ export async function POST(request: NextRequest) {
 					message: "Ошибка валидации данных",
 					errors,
 				},
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -96,13 +95,13 @@ export async function POST(request: NextRequest) {
 					createdAt: order.createdAt,
 				},
 			},
-			{ status: 201 }
+			{ status: 201 },
 		);
 	} catch (error) {
 		console.error("Error creating order:", error);
 		return NextResponse.json(
 			{ success: false, message: "Ошибка при создании заявки" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }
@@ -112,7 +111,7 @@ export async function GET(request: NextRequest) {
 		if (!verifyAdminTokenFromRequest(request)) {
 			return NextResponse.json(
 				{ success: false, message: "Unauthorized" },
-				{ status: 401 }
+				{ status: 401 },
 			);
 		}
 
@@ -142,7 +141,7 @@ export async function GET(request: NextRequest) {
 		console.error("Error fetching orders:", error);
 		return NextResponse.json(
 			{ success: false, message: "Ошибка при получении заявок" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

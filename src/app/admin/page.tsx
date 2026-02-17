@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import ProductForm from "@/components/admin/ProductForm";
 import ProductList from "@/components/admin/ProductList";
 import OrderList from "@/components/admin/OrderList";
 import BackgroundGlow from "@/components/BackgroundGlow";
 import { useLogoutMutation } from "@/store/api/authApi";
+import type { Product } from "@/types/product";
 
 type Tab = "orders" | "products";
 
@@ -14,11 +15,23 @@ export default function AdminPage() {
 	const router = useRouter();
 	const [activeTab, setActiveTab] = useState<Tab>("orders");
 	const [refreshKey, setRefreshKey] = useState(0);
+	const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+	const formRef = useRef<HTMLDivElement>(null);
 
 	const [logout] = useLogoutMutation();
 
 	const handleProductAdded = () => {
 		setRefreshKey((prev) => prev + 1);
+		setEditingProduct(null);
+	};
+
+	const handleEditProduct = (product: Product) => {
+		setEditingProduct(product);
+		formRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
+
+	const handleCancelEdit = () => {
+		setEditingProduct(null);
 	};
 
 	const handleLogout = async () => {
@@ -76,11 +89,15 @@ export default function AdminPage() {
 				{activeTab === "products" && (
 					<section className="w-full rounded-3xl bg-carbon/30 p-4 sm:p-6 lg:p-8">
 						<div className="w-full flex flex-col gap-6">
-							<div className="w-full">
-								<ProductForm onProductAdded={handleProductAdded} />
+							<div className="w-full" ref={formRef}>
+								<ProductForm
+									onProductAdded={handleProductAdded}
+									editProduct={editingProduct}
+									onCancel={handleCancelEdit}
+								/>
 							</div>
 							<div className="w-full">
-								<ProductList key={refreshKey} />
+								<ProductList key={refreshKey} onEditProduct={handleEditProduct} />
 							</div>
 						</div>
 					</section>

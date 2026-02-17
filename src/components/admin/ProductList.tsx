@@ -21,7 +21,11 @@ const iconMap: Record<SpecType, React.ReactElement> = {
 	),
 };
 
-export default function ProductList() {
+interface ProductListProps {
+	onEditProduct?: (product: Product) => void;
+}
+
+export default function ProductList({ onEditProduct }: ProductListProps) {
 	const { data, isLoading, error } = useGetProductsQuery();
 	const [deleteProduct] = useDeleteProductMutation();
 
@@ -34,7 +38,7 @@ export default function ProductList() {
 			await deleteProduct(productId).unwrap();
 		} catch (error) {
 			alert(
-				error instanceof Error ? error.message : "Ошибка при удалении товара"
+				error instanceof Error ? error.message : "Ошибка при удалении товара",
 			);
 		}
 	};
@@ -69,13 +73,16 @@ export default function ProductList() {
 
 	const { products } = data;
 
-	const groupedProducts = products.reduce((acc, product) => {
-		if (!acc[product.category]) {
-			acc[product.category] = [];
-		}
-		acc[product.category].push(product);
-		return acc;
-	}, {} as Record<string, Product[]>);
+	const groupedProducts = products.reduce(
+		(acc, product) => {
+			if (!acc[product.category]) {
+				acc[product.category] = [];
+			}
+			acc[product.category].push(product);
+			return acc;
+		},
+		{} as Record<string, Product[]>,
+	);
 
 	return (
 		<section className="w-full">
@@ -95,25 +102,48 @@ export default function ProductList() {
 									key={product._id}
 									className="relative flex flex-col gap-3 rounded-2xl bg-carbon p-3 sm:rounded-3xl sm:p-4 md:p-5"
 								>
-									<button
-										onClick={() => handleDelete(product._id)}
-										className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-red-500/20 text-red-500 transition hover:bg-red-500 hover:text-white sm:h-10 sm:w-10"
-										aria-label="Удалить товар"
-									>
-										<svg
-											className="h-4 w-4 sm:h-5 sm:w-5"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
+									<div className="absolute right-2 top-2 flex gap-1.5">
+										{onEditProduct && (
+											<button
+												onClick={() => onEditProduct(product)}
+												className="flex h-8 w-8 items-center justify-center rounded-full bg-azure/20 text-azure transition hover:bg-azure hover:text-white sm:h-10 sm:w-10"
+												aria-label="Редактировать товар"
+											>
+												<svg
+													className="h-4 w-4 sm:h-5 sm:w-5"
+													fill="none"
+													stroke="currentColor"
+													viewBox="0 0 24 24"
+												>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth={2}
+														d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+													/>
+												</svg>
+											</button>
+										)}
+										<button
+											onClick={() => handleDelete(product._id)}
+											className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500/20 text-red-500 transition hover:bg-red-500 hover:text-white sm:h-10 sm:w-10"
+											aria-label="Удалить товар"
 										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth={2}
-												d="M6 18L18 6M6 6l12 12"
-											/>
-										</svg>
-									</button>
+											<svg
+												className="h-4 w-4 sm:h-5 sm:w-5"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M6 18L18 6M6 6l12 12"
+												/>
+											</svg>
+										</button>
+									</div>
 
 									<img
 										src={product.image}
@@ -126,7 +156,7 @@ export default function ProductList() {
 											{product.title}
 										</span>
 										<span className="font-semibold leading-tight">
-											{product.price.toLocaleString("ru-RU")} р.
+											{product.price.toLocaleString("ru-RU")} ₽
 										</span>
 									</div>
 
@@ -158,7 +188,7 @@ export default function ProductList() {
 															{firstOption.value}
 															{firstOption.price > 0 &&
 																` (+${firstOption.price.toLocaleString(
-																	"ru-RU"
+																	"ru-RU",
 																)} р.)`}
 														</span>
 													</li>

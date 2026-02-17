@@ -56,7 +56,7 @@ export default function Footer() {
 				</a>
 			</div>
 			<a
-				href="https://t.me/powertechstore102"
+				href="https://t.me/m/8HCVV4B3NTZi"
 				target="_blank"
 				rel="noreferrer"
 				aria-label="Написать в Telegram"

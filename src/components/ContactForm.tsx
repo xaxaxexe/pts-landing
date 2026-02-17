@@ -22,16 +22,16 @@ const formatPhoneNumber = (value: string) => {
 		return `+${numbers.slice(0, 1)} (${numbers.slice(1)}`;
 	if (numbers.length <= 7)
 		return `+${numbers.slice(0, 1)} (${numbers.slice(1, 4)}) ${numbers.slice(
-			4
+			4,
 		)}`;
 	if (numbers.length <= 9)
 		return `+${numbers.slice(0, 1)} (${numbers.slice(1, 4)}) ${numbers.slice(
 			4,
-			7
+			7,
 		)}-${numbers.slice(7)}`;
 	return `+${numbers.slice(0, 1)} (${numbers.slice(1, 4)}) ${numbers.slice(
 		4,
-		7
+		7,
 	)}-${numbers.slice(7, 9)}-${numbers.slice(9, 11)}`;
 };
 
@@ -39,22 +39,23 @@ const contactSchema = z.object({
 	name: z.string().min(2, "Имя должно содержать минимум 2 символа"),
 	telegram: z
 		.string()
+		.min(1, "Telegram обязателен")
 		.refine(
-			(val) => !val || /^@?[a-zA-Z][a-zA-Z0-9_]{3,31}$/.test(val),
-			"Неверный формат Telegram"
+			(val) => /^@?[a-zA-Z][a-zA-Z0-9_]{3,31}$/.test(val),
+			"Неверный формат Telegram",
 		),
 	phone: z
 		.string()
 		.min(1, "Телефон обязателен")
 		.regex(
 			/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/,
-			"Введите полный номер телефона"
+			"Введите полный номер телефона",
 		),
 	email: z
 		.string()
 		.refine(
 			(val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-			"Неверный формат email"
+			"Неверный формат email",
 		),
 	city: z.string().min(2, "Город должен содержать минимум 2 символа"),
 	consent: z.boolean().refine((val) => val === true, {
@@ -96,11 +97,14 @@ export default function ContactForm() {
 				return {};
 			} catch (error) {
 				if (error instanceof z.ZodError) {
-					return error.issues.reduce((acc: Record<string, string>, curr) => {
-						const path = curr.path.join(".");
-						acc[path] = curr.message;
-						return acc;
-					}, {} as Record<string, string>);
+					return error.issues.reduce(
+						(acc: Record<string, string>, curr) => {
+							const path = curr.path.join(".");
+							acc[path] = curr.message;
+							return acc;
+						},
+						{} as Record<string, string>,
+					);
 				}
 				return {};
 			}
@@ -124,7 +128,7 @@ export default function ContactForm() {
 								image: selectedProduct.image,
 								selectedOptions: selectedProduct.selectedOptions,
 								totalPrice: selectedProduct.totalPrice,
-						  }
+							}
 						: null,
 				};
 
@@ -176,7 +180,7 @@ export default function ContactForm() {
 					icon={<SendIcon className="h-6 w-6 sm:h-8 sm:w-8" />}
 					id="telegram"
 					name="telegram"
-					placeholder="Ваш Telegram для связи (не обязательно)"
+					placeholder="Ваш Telegram для связи"
 					value={formik.values.telegram}
 					onChange={(e) => {
 						let value = e.target.value;

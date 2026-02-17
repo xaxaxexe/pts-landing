@@ -50,6 +50,16 @@ export interface CreateProductRequest {
 	image: string;
 }
 
+export interface UpdateProductRequest {
+	id: string;
+	data: Partial<CreateProductRequest>;
+}
+
+export interface UpdateProductResponse {
+	success: boolean;
+	product: Product;
+}
+
 export interface DeleteProductResponse {
 	message: string;
 }

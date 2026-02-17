@@ -33,7 +33,9 @@ export default function AboutSection() {
 					</dd>
 				</div>
 				<div className="flex flex-col justify-center items-center gap-1">
-					<dt className="font-semibold text-5xl sm:text-6xl lg:text-7xl">6</dt>
+					<dt className="font-semibold text-5xl sm:text-6xl lg:text-7xl">
+						&gt;4
+					</dt>
 					<dd className="text-md sm:text-xl lg:text-2xl text-silver font-medium">
 						Лет на рынке
 					</dd>

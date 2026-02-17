@@ -4,6 +4,8 @@ import type {
 	ProductsResponse,
 	Product,
 	CreateProductRequest,
+	UpdateProductRequest,
+	UpdateProductResponse,
 	DeleteProductResponse,
 	UploadImageResponse,
 	DeleteImageRequest,
@@ -34,6 +36,20 @@ export const productsApi = createApi({
 			}),
 			invalidatesTags: ["Products"],
 		}),
+		updateProduct: builder.mutation<
+			UpdateProductResponse,
+			UpdateProductRequest
+		>({
+			query: ({ id, data }) => ({
+				url: `/products?id=${id}`,
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: data,
+			}),
+			invalidatesTags: ["Products"],
+		}),
 		deleteProduct: builder.mutation<DeleteProductResponse, string>({
 			query: (id) => ({
 				url: `/products?id=${id}`,
@@ -61,6 +77,7 @@ export const {
 	useGetProductsQuery,
 	useGetProductsByCategoryQuery,
 	useCreateProductMutation,
+	useUpdateProductMutation,
 	useDeleteProductMutation,
 	useUploadImageMutation,
 	useDeleteImageMutation,

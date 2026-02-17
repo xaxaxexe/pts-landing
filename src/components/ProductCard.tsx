@@ -55,7 +55,7 @@ export default function ProductCard({
 	const hasOptions = productData.specs.some(
 		(spec) =>
 			(spec.options && spec.options.length > 0) ||
-			(spec.colorOptions && spec.colorOptions.length > 0)
+			(spec.colorOptions && spec.colorOptions.length > 0),
 	);
 
 	const handleBuyClick = () => {
@@ -105,7 +105,9 @@ export default function ProductCard({
 
 				<div className="flex sm:items-center justify-between text-base sm:text-lg lg:text-xl">
 					<span className="font-bold leading-tight">{title}</span>
-					<span className="font-semibold leading-tight">{price} р.</span>
+					<span className="font-semibold leading-tight">
+						{price.toLocaleString("ru-RU")} ₽
+					</span>
 				</div>
 				<ul className="flex flex-col gap-2">
 					{specs.map((spec, index) => (
