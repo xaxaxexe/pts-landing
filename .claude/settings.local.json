@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(cat:*)",
-      "mcp__ide__getDiagnostics",
-      "Bash(npx tsc:*)"
-    ]
-  }
-}
