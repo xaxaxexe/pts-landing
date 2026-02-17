@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { unlink } from "fs/promises";
@@ -20,14 +21,14 @@ export async function POST(request: NextRequest) {
 		if (!category || !title || !price || !specs || !image) {
 			return NextResponse.json(
 				{ error: "Missing required fields" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
 		if (!Array.isArray(specs) || specs.length === 0) {
 			return NextResponse.json(
 				{ error: "Specs must be a non-empty array" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
 			if (!spec.type) {
 				return NextResponse.json(
 					{ error: "Each spec must have a type" },
-					{ status: 400 }
+					{ status: 400 },
 				);
 			}
 
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
 					{
 						error: "Invalid spec type. Must be cpu, gpu, memory, ssd, or color",
 					},
-					{ status: 400 }
+					{ status: 400 },
 				);
 			}
 
@@ -52,13 +53,13 @@ export async function POST(request: NextRequest) {
 				if (!spec.value) {
 					return NextResponse.json(
 						{ error: `${spec.type} must have a value` },
-						{ status: 400 }
+						{ status: 400 },
 					);
 				}
 				if (spec.options) {
 					return NextResponse.json(
 						{ error: `${spec.type} should not have options array` },
-						{ status: 400 }
+						{ status: 400 },
 					);
 				}
 			}
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
 				if (spec.value) {
 					return NextResponse.json(
 						{ error: `${spec.type} should not have a single value` },
-						{ status: 400 }
+						{ status: 400 },
 					);
 				}
 				if (
@@ -77,7 +78,7 @@ export async function POST(request: NextRequest) {
 				) {
 					return NextResponse.json(
 						{ error: `${spec.type} must have at least one option` },
-						{ status: 400 }
+						{ status: 400 },
 					);
 				}
 
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
 							{
 								error: `Each ${spec.type} option must have value and price`,
 							},
-							{ status: 400 }
+							{ status: 400 },
 						);
 					}
 				}
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest) {
 				if (spec.value || spec.options) {
 					return NextResponse.json(
 						{ error: "color should not have value or options" },
-						{ status: 400 }
+						{ status: 400 },
 					);
 				}
 				if (
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
 				) {
 					return NextResponse.json(
 						{ error: "color must have at least one colorOption" },
-						{ status: 400 }
+						{ status: 400 },
 					);
 				}
 
@@ -122,7 +123,7 @@ export async function POST(request: NextRequest) {
 								error:
 									"Each color option must have color (black or white) and price",
 							},
-							{ status: 400 }
+							{ status: 400 },
 						);
 					}
 				}
@@ -137,18 +138,20 @@ export async function POST(request: NextRequest) {
 			image,
 		});
 
+		revalidatePath("/");
+
 		return NextResponse.json(
 			{
 				success: true,
 				product,
 			},
-			{ status: 201 }
+			{ status: 201 },
 		);
 	} catch (error) {
 		console.error("Error creating product:", error);
 		return NextResponse.json(
 			{ error: "Internal server error" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }
@@ -191,13 +194,13 @@ export async function GET(request: NextRequest) {
 				count: sortedProducts.length,
 				products: sortedProducts,
 			},
-			{ status: 200 }
+			{ status: 200 },
 		);
 	} catch (error) {
 		console.error("Error fetching products:", error);
 		return NextResponse.json(
 			{ error: "Internal server error" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }
@@ -216,7 +219,7 @@ export async function DELETE(request: NextRequest) {
 		if (!id) {
 			return NextResponse.json(
 				{ error: "Product ID is required" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -241,18 +244,20 @@ export async function DELETE(request: NextRequest) {
 
 		await Product.findByIdAndDelete(id);
 
+		revalidatePath("/");
+
 		return NextResponse.json(
 			{
 				success: true,
 				message: "Product and image deleted successfully",
 			},
-			{ status: 200 }
+			{ status: 200 },
 		);
 	} catch (error) {
 		console.error("Error deleting product:", error);
 		return NextResponse.json(
 			{ error: "Internal server error" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }
