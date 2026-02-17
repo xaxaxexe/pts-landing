@@ -11,9 +11,9 @@ export default function AboutSection() {
 				О НАС
 			</h2>
 			<p className="text-center text-md sm:text-2xl lg:text-3xl font-medium text-silver">
-				<span className="font-bold text-white">POWERTECHSTORE</span> — это
-				прекрасное решение для сборки компьютера именно мы можем в короткий срок
-				собрать и доставить вам вашего железного зверя
+				<span className="font-bold text-white">POWERTECHSTORE</span> — создаём
+				компьютеры без компромиссов. Максимальная мощность, стабильность и
+				гарантия.
 			</p>
 			<dl className="w-full flex flex-col gap-8 sm:gap-0 sm:flex-row justify-between pt-5 sm:pt-20">
 				<div className="flex flex-col justify-center items-center gap-1">
